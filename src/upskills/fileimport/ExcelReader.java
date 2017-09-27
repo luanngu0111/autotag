@@ -20,6 +20,10 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+/**
+ * @author Ngu Nguyen
+ * Class usage is to read some kinds of excel file such as: CSV, XLSX and XLS
+ */
 public class ExcelReader {
 	private String csvFile;
 	private BufferedReader br = null;
