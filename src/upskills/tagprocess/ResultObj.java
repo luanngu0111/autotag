@@ -17,7 +17,7 @@ public class ResultObj {
 	private String currency;
 	private String field_name;
 	private boolean systematic;
-	private List<Integer> issues;
+	private Integer issues;
 	public boolean isSelected() {
 		return selected;
 	}
@@ -66,10 +66,10 @@ public class ResultObj {
 	public void setSystematic(boolean systematic) {
 		this.systematic = systematic;
 	}
-	public List<Integer> getIssues() {
+	public Integer getIssues() {
 		return issues;
 	}
-	public void setIssues(List<Integer> issues) {
+	public void setIssues(Integer issues) {
 		this.issues = issues;
 	}
 	
@@ -84,7 +84,7 @@ public class ResultObj {
 		this.currency = null;
 		this.field_name = null;
 		this.systematic = false;
-		this.issues = new ArrayList<Integer>();
+		this.issues = 0;
 	}
 	/**
 	 * @param selected
@@ -98,7 +98,7 @@ public class ResultObj {
 	 * @param issues
 	 */
 	public ResultObj(boolean selected, int trade_number, String trade_family, String trade_group, String trade_type,
-			String currency, String field_name, boolean systematic, List<Integer> issues) {
+			String currency, String field_name, boolean systematic, Integer issues) {
 		super();
 		this.selected = selected;
 		this.trade_number = trade_number;
@@ -121,7 +121,7 @@ public class ResultObj {
 	 * @param issues
 	 */
 	public ResultObj(int trade_number, String trade_family, String trade_group, String trade_type, String currency,
-			String field_name, boolean systematic, List<Integer> issues) {
+			String field_name, boolean systematic, Integer issues) {
 		super();
 		this.trade_number = trade_number;
 		this.trade_family = trade_family;
@@ -189,10 +189,7 @@ public class ResultObj {
 		str_list.add(currency);
 		str_list.add(field_name);
 		str_list.add(systematic?"Y":"N");
-		for (int issue_id : issues)
-		{
-			str_list.add(String.valueOf(issue_id));
-		}
+		str_list.add(String.valueOf(issues));
 		return str_list;
 	}
 }
