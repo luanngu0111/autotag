@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 27, 2017 2:16:11 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+ <class catalog="recondb" name="upskills.database.model.Issue" table="issue">
+  <id name="id" type="java.lang.Integer">
+   <column name="ID"/>
+   <generator class="identity"/>
+  </id>
+  <property generated="never" lazy="false" name="report" type="string">
+   <column length="50" name="report"/>
+  </property>
+  <property generated="never" lazy="false" name="trnFmly" type="string">
+   <column length="50" name="trn_fmly"/>
+  </property>
+  <property generated="never" lazy="false" name="trnGrp" type="string">
+   <column length="50" name="trn_grp"/>
+  </property>
+  <property generated="never" lazy="false" name="trnType" type="string">
+   <column length="50" name="trn_type"/>
+  </property>
+  <property generated="never" lazy="false" name="sqlFilter" type="string">
+   <column name="sql_filter"/>
+  </property>
+  <property generated="never" lazy="false" name="correctSource" type="string">
+   <column length="50" name="correct_source"/>
+  </property>
+  <property generated="never" lazy="false" name="differentType" type="string">
+   <column length="50" name="different_type"/>
+  </property>
+  <property generated="never" lazy="false" name="explanation" type="string">
+   <column name="explanation"/>
+  </property>
+  <property generated="never" lazy="false" name="fieldValues" type="string">
+   <column length="50" name="field_values"/>
+  </property>
+ </class>
+</hibernate-mapping>

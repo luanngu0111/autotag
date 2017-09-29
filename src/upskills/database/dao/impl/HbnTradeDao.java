@@ -9,8 +9,7 @@ public class HbnTradeDao extends AbstractHbnDao<Trade> implements TradeDao {
 
 	public Trade getTradeByNbAndField(TradeId tradeId) {
 		Trade result = null;
-		result = (Trade) getSession().getNamedQuery("getTradeByNbAndField")
-				.setParameter(0, tradeId.getNb())
+		result = (Trade) getSession().getNamedQuery("getTradeByNbAndField").setParameter(0, tradeId.getNb())
 				// .setInteger("NB", tradeId.getNb()) //Deprecated
 				// .setString("field", tradeId.getField().trim()) //Deprecated
 				.setParameter(1, tradeId.getField()).uniqueResult();
