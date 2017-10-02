@@ -37,13 +37,13 @@ public class TagProcess {
 	 * @param mm_result result which read from mismatch result file
 	 * @return list of trade info 
 	 */
-	public List<ResultObj> extractMismatchColumn(List<String[]> mm_result) {
+	public static List<ResultObj> extractMismatchColumn(List<String[]> mm_result) {
 		String[] header = mm_result.get(0);
 		int i = 1;
-		int fam_ind = Arrays.binarySearch(header, 0, header.length, IConstants.HEADER_FAMILY);
-		int grp_ind = Arrays.binarySearch(header, 0, header.length, IConstants.HEADER_GROUP);
-		int typ_ind = Arrays.binarySearch(header, 0, header.length, IConstants.HEADER_TYPE);
-		int cur_ind = Arrays.binarySearch(header, 0, header.length, IConstants.HEADER_CURR);;
+		int fam_ind = Arrays.binarySearch(header, 0, header.length-1, IConstants.HEADER_FAMILY);
+		int grp_ind = Arrays.binarySearch(header, 0, header.length-1, IConstants.HEADER_GROUP);
+		int typ_ind = Arrays.binarySearch(header, 0, header.length-1, IConstants.HEADER_TYPE);
+		int cur_ind = Arrays.binarySearch(header, 0, header.length-1, IConstants.HEADER_CURR);
 		int size = mm_result.size();
 		ResultObj result = new ResultObj();
 		List<ResultObj> mm_table = new ArrayList<ResultObj>();
@@ -55,7 +55,7 @@ public class TagProcess {
 				String str1 = data1[j];
 				String str2 = data2[j];
 				if (j == 0) {
-					result.setTrade_number(Integer.parseInt(str1));					
+					result.setTrade_number((int)Float.parseFloat(str1));					
 				} else 
 				{
 					if (str1 != str2)
@@ -76,7 +76,19 @@ public class TagProcess {
 		return mm_table;
 	}
 	
-
+	public static void main(String[] args){
+		try {
+			List<String[]> mm_result = ExcelReader.readExcelFile(IConstants.FILE_PATH, 2);
+			List<ResultObj> test = extractMismatchColumn(mm_result);
+			for (ResultObj obj : test)
+			{
+				System.out.println(obj.convertObj());
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	@SuppressWarnings("unused")
 	public void MajorProc() throws IOException {
@@ -99,8 +111,9 @@ public class TagProcess {
 			// Check Trade NB whether to exists in DB
 			boolean is_trade_exist = false;
 			Trade obj_trade = new Trade();
-			// obj_trade = database.getAllIssueByTrade(trade_number) --TODO
-			is_trade_exist = (obj_trade != null);
+			List<Trade> obj_trades = new ArrayList<Trade>();
+			obj_trades = hb_trade_dao.getTradeByNb(trade_number) ;
+			is_trade_exist = (obj_trades != null);
 
 			if (is_trade_exist) { // trade exist in Trade table
 				// Initial Trade Object
@@ -118,7 +131,6 @@ public class TagProcess {
 
 				} else { // In case the field NOT exists in Trades-Issue info
 					List<String> fields = new ArrayList<String>();
-					List<Trade> obj_trades = new ArrayList<Trade>();
 					obj_trade = obj_trades.get(0);
 					// obj_trades = database.getAllIssueByTrade(trade_number) --TODO
 					obj_result = new ResultObj(false, obj_trades.get(0).getId().getNb(), obj_trades.get(0).getTrnFmly(),

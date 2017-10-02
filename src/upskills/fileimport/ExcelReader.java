@@ -12,6 +12,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import jxl.read.biff.BiffException;
+import resources.IConstants;
+import upskills.tagprocess.ResultObj;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -259,7 +261,7 @@ public class ExcelReader {
 	 */
 	public static List<String[]> readExcelFile(String filename,
 			int sheet_id) throws IOException {
-		String ext = filename.substring(filename.lastIndexOf("."),
+		String ext = filename.substring(filename.lastIndexOf(".")+1,
 				filename.length());
 		List<String[]> lines = new ArrayList<>();
 		switch (ext) {
@@ -279,5 +281,6 @@ public class ExcelReader {
 		return lines;
 
 	}
+	
 	
 }

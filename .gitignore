@@ -1,3 +1,9 @@
 
 bin/upskills/fileimport/ExcelReader.class
 /bin/
+bin/resources/hibernate.cfg.xml
+bin/resources/hibernate.cfg.xml
+bin/resources/IConstants.class
+bin/upskills/database/Configs.class
+*.class
+*.class
