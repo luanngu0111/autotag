@@ -7,3 +7,4 @@ bin/resources/IConstants.class
 bin/upskills/database/Configs.class
 *.class
 *.class
+*.class
