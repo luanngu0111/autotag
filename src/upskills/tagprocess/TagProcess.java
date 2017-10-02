@@ -40,26 +40,25 @@ public class TagProcess {
 	public static List<ResultObj> extractMismatchColumn(List<String[]> mm_result) {
 		String[] header = mm_result.get(0);
 		int i = 1;
-		int fam_ind = Arrays.binarySearch(header, 0, header.length-1, IConstants.HEADER_FAMILY);
-		int grp_ind = Arrays.binarySearch(header, 0, header.length-1, IConstants.HEADER_GROUP);
-		int typ_ind = Arrays.binarySearch(header, 0, header.length-1, IConstants.HEADER_TYPE);
-		int cur_ind = Arrays.binarySearch(header, 0, header.length-1, IConstants.HEADER_CURR);
+		int fam_ind = Arrays.asList(header).indexOf(IConstants.HEADER_FAMILY);
+		int grp_ind = Arrays.asList(header).indexOf(IConstants.HEADER_GROUP);
+		int typ_ind = Arrays.asList(header).indexOf(IConstants.HEADER_TYPE);
+		int cur_ind = Arrays.asList(header).indexOf(IConstants.HEADER_CURR);
 		int size = mm_result.size();
-		ResultObj result = new ResultObj();
+		ResultObj result = null;
 		List<ResultObj> mm_table = new ArrayList<ResultObj>();
 		for (; i < size - 1; i = i + 2) {
 			String[] data1 = mm_result.get(i);
 			String[] data2 = mm_result.get(i + 1);
 			int col_size = data1.length;
+			result = new ResultObj();
 			for (int j = 0; j < col_size; j++) {
 				String str1 = data1[j];
 				String str2 = data2[j];
 				if (j == 0) {
-					result.setTrade_number((int)Float.parseFloat(str1));					
-				} else 
-				{
-					if (str1 != str2)
-					{
+					result.setTrade_number((int) Float.parseFloat(str1));
+				} else {
+					if (str1 != str2) {
 						result.setCurrency(data1[cur_ind]);
 						result.setField_name(header[j]);
 						result.setSelected(false);
@@ -80,6 +79,14 @@ public class TagProcess {
 		try {
 			List<String[]> mm_result = ExcelReader.readExcelFile(IConstants.FILE_PATH, 2);
 			List<ResultObj> test = extractMismatchColumn(mm_result);
+//			for (String[] mm : mm_result)
+//			{
+//				for (String s: mm)
+//				{
+//					System.out.print(s+",");
+//				}
+//				System.out.println(" ");
+//			}
 			for (ResultObj obj : test)
 			{
 				System.out.println(obj.convertObj());
