@@ -17,7 +17,7 @@ public class ResultObj {
 	private String currency;
 	private String field_name;
 	private boolean systematic;
-	private Integer issues;
+	private List<Integer> issues;
 	public boolean isSelected() {
 		return selected;
 	}
@@ -66,12 +66,6 @@ public class ResultObj {
 	public void setSystematic(boolean systematic) {
 		this.systematic = systematic;
 	}
-	public Integer getIssues() {
-		return issues;
-	}
-	public void setIssues(Integer issues) {
-		this.issues = issues;
-	}
 	
 	public ResultObj()
 	{
@@ -84,7 +78,7 @@ public class ResultObj {
 		this.currency = null;
 		this.field_name = null;
 		this.systematic = false;
-		this.issues = 0;
+		this.issues = null;
 	}
 	/**
 	 * @param selected
@@ -98,7 +92,7 @@ public class ResultObj {
 	 * @param issues
 	 */
 	public ResultObj(boolean selected, int trade_number, String trade_family, String trade_group, String trade_type,
-			String currency, String field_name, boolean systematic, Integer issues) {
+			String currency, String field_name, boolean systematic, List<Integer> issues) {
 		super();
 		this.selected = selected;
 		this.trade_number = trade_number;
@@ -121,7 +115,7 @@ public class ResultObj {
 	 * @param issues
 	 */
 	public ResultObj(int trade_number, String trade_family, String trade_group, String trade_type, String currency,
-			String field_name, boolean systematic, Integer issues) {
+			String field_name, boolean systematic, List<Integer> issues) {
 		super();
 		this.trade_number = trade_number;
 		this.trade_family = trade_family;
@@ -153,6 +147,7 @@ public class ResultObj {
 		this.currency = currency;
 		this.field_name = field_name;
 		this.systematic = systematic;
+		this.issues = new ArrayList<Integer>();
 	}
 	/**
 	 * @param trade_number
@@ -173,6 +168,7 @@ public class ResultObj {
 		this.currency = currency;
 		this.field_name = field_name;
 		this.systematic = systematic;
+		this.issues = new ArrayList<Integer>();
 	}
 	
 	/** Present object properties as a list of string
@@ -191,5 +187,10 @@ public class ResultObj {
 		str_list.add(systematic?"Y":"N");
 		str_list.add(String.valueOf(issues));
 		return str_list;
+	}
+	
+	public void addIssue(int issue_id)
+	{
+		this.issues.add(issue_id);
 	}
 }
