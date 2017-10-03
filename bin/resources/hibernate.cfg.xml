@@ -5,7 +5,7 @@
  <session-factory name="">
   <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
   <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-  <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/recondb</property>
+  <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/recondb?autoReconnect=true&amp;useSSL=false</property>
   <property name="hibernate.connection.username">root</property>
   <property name="hibernate.connection.password">341611456</property>
   <!-- Set auto commit is false 
@@ -15,8 +15,8 @@
 <property name="format_sql">true</property>
 <property name="use_sql_comment">true</property>
  ForJDBC transaction 
-<property name="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
- Mapping file -->
+<property name="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>-->
+  <property name="hibernate.current_session_context_class">thread</property>
   <mapping resource="upskills/database/model/Issue.hbm.xml"/>
   <mapping resource="upskills/database/model/Trade.hbm.xml"/>
  </session-factory>

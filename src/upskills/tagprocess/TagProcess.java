@@ -6,8 +6,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import resources.IConstants;
-import upskills.database.Configs;
+import upskills.database.dao.impl.HbnIssueDao;
 import upskills.database.dao.impl.HbnTradeDao;
+import upskills.database.model.Issue;
 import upskills.database.model.Trade;
 import upskills.database.model.TradeId;
 import upskills.fileexport.ExcelWriter;
@@ -28,9 +29,17 @@ import upskills.fileimport.ExcelReader;
  */
 public class TagProcess {
 	
-	public void Initialize()
+
+	public static void InsertNewTradeIssue(Trade trade)
 	{
-		Configs.setProperties(IConstants.HOST_NAME, IConstants.PORT, IConstants.USER_NAME, IConstants.PASSWORD, IConstants.DB_NAME);
+		HbnTradeDao hbn = new HbnTradeDao();
+		hbn.create(trade);
+	}
+	
+	public static void InsertNewIssue(Issue issue)
+	{
+		HbnIssueDao hbn = new HbnIssueDao();
+		hbn.create(issue);
 	}
 	
 	/** This method is to read mismatch result and extract info about trade and wrong column
@@ -51,14 +60,20 @@ public class TagProcess {
 			String[] data1 = mm_result.get(i);
 			String[] data2 = mm_result.get(i + 1);
 			int col_size = data1.length;
-			result = new ResultObj();
+			int trade_number = 0;
+			
 			for (int j = 0; j < col_size; j++) {
 				String str1 = data1[j];
 				String str2 = data2[j];
 				if (j == 0) {
-					result.setTrade_number((int) Float.parseFloat(str1));
+					trade_number = (int) Float.parseFloat(str1);
 				} else {
-					if (str1 != str2) {
+					/*
+					 * Value is not same and column is not in ignore list
+					 */
+					if (!str1.equals(str2) && !Arrays.asList(IConstants.IGNORE_COLUMN).contains(header[j])) {
+						result = new ResultObj();
+						result.setTrade_number(trade_number);
 						result.setCurrency(data1[cur_ind]);
 						result.setField_name(header[j]);
 						result.setSelected(false);
@@ -66,48 +81,48 @@ public class TagProcess {
 						result.setTrade_family(data1[fam_ind]);
 						result.setTrade_group(data1[grp_ind]);
 						result.setTrade_type(data1[typ_ind]);
+						mm_table.add(result);
 					}
 				}
 
 			}
-			mm_table.add(result);
 		}
 		return mm_table;
 	}
 	
 	public static void main(String[] args){
 		try {
-			List<String[]> mm_result = ExcelReader.readExcelFile(IConstants.FILE_PATH, 2);
-			List<ResultObj> test = extractMismatchColumn(mm_result);
-//			for (String[] mm : mm_result)
-//			{
-//				for (String s: mm)
-//				{
-//					System.out.print(s+",");
-//				}
-//				System.out.println(" ");
-//			}
-			for (ResultObj obj : test)
-			{
-				System.out.println(obj.convertObj());
-			}
+			MajorProc();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	public static void PrintScreen(List<ResultObj> test)
+	{
+		ResultObj obj_result = null;
+		for (ResultObj obj : test) {
+		
+			System.out.println(obj.convertObj());
+		}
+	}
 	
 	@SuppressWarnings("unused")
-	public void MajorProc() throws IOException {
-		Initialize();
+	public static void MajorProc() throws IOException {
 		int trade_number = 0;
 		String field_name = "";
 		List<ResultObj> results = new ArrayList<ResultObj>();
 		ResultObj obj_result = null;
-
-		List<String[]> mm_result = ExcelReader.readExcelFile(IConstants.FILE_PATH, 0);
+		List<String[]> mm_result = new ArrayList<String[]>();
+		if (IConstants.EXCEL_SHEET_ID != -1)
+		{
+			mm_result = ExcelReader.readExcelFile(IConstants.FILE_PATH, IConstants.EXCEL_SHEET_NAME);
+		} else {
+			mm_result = ExcelReader.readExcelFile(IConstants.FILE_PATH, IConstants.EXCEL_SHEET_ID);
+		}
 		List<ResultObj> trade_field = extractMismatchColumn(mm_result);
 		// START loop to read Mismatch file
+		System.out.println("Processing .... ");
 		for (ResultObj tf : trade_field) {
 			field_name = tf.getField_name();
 			trade_number = tf.getTrade_number();
@@ -139,7 +154,7 @@ public class TagProcess {
 				} else { // In case the field NOT exists in Trades-Issue info
 					List<String> fields = new ArrayList<String>();
 					obj_trade = obj_trades.get(0);
-					// obj_trades = database.getAllIssueByTrade(trade_number) --TODO
+					obj_trades = hb_trade_dao.getTradeByNb(trade_number) ;
 					obj_result = new ResultObj(false, obj_trades.get(0).getId().getNb(), obj_trades.get(0).getTrnFmly(),
 							obj_trades.get(0).getTrnGrp(), obj_trades.get(0).getTrnType(),
 							obj_trades.get(0).getCurrency(), field_name, false);
@@ -154,7 +169,7 @@ public class TagProcess {
 			
 		}
 		// END loop
-		ExcelWriter.exportExcelFile(IConstants.EXPORT_EXCEL_FILE, results, IConstants.EXCEL_SHEET_NAME);
-		
+		ExcelWriter.exportExcelFile(IConstants.EXPORT_EXCEL_FILE, results, IConstants.EXCEL_EXPORT_SHEET);
+		System.out.println("Export completed !");
 	}
 }

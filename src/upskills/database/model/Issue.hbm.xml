@@ -36,4 +36,5 @@
    <column length="50" name="field_values"/>
   </property>
  </class>
+ <query name="getIssueById">from Issue where ID=:ID</query>
 </hibernate-mapping>

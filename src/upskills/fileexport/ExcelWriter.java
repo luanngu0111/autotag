@@ -41,6 +41,13 @@ public class ExcelWriter {
 			WritableSheet excelSheet = Wbook.createSheet(sheetname, 0);
 			Label label = null;
 			String[] str = null;
+			for (String header: IConstants.EXPORT_HEADER)
+			{
+				label = new Label(col_size++, 0, header);
+				excelSheet.addCell(label);
+			}
+			col_size = 0;
+			
 			for (int i = 0; i < result.size(); i++) {
 				str = result.get(i);
 				col_size = str.length;
@@ -81,6 +88,12 @@ public class ExcelWriter {
 			WritableSheet excelSheet = Wbook.createSheet(sheetname, 0);
 			Label label = null;
 			ResultObj obj = null;
+			for (String header: IConstants.EXPORT_HEADER)
+			{
+				label = new Label(col_size++, 0, header);
+				excelSheet.addCell(label);
+			}
+			col_size = 0;
 			for (int i = 0; i < result.size(); i++) {
 				obj = result.get(i);
 				List<String> conv_ob = obj.convertObj();
@@ -117,9 +130,16 @@ public class ExcelWriter {
 		XSSFSheet sheet = workbook.createSheet(sheetname);
 		int rowNum = 0;
 		// System.out.println("Creating excel");
+		Row headrow = sheet.createRow(rowNum++);
+		int colNum = 0;
+		for (String header : IConstants.EXPORT_HEADER) {
+			Cell cell = headrow.createCell(colNum++);
+			cell.setCellValue(header);
+
+		}
 		for (String[] str : result) {
 			Row row = sheet.createRow(rowNum++);
-			int colNum = 0;
+			colNum = 0;
 			for (String field : str) {
 				Cell cell = row.createCell(colNum++);
 				cell.setCellValue(field);
@@ -142,9 +162,17 @@ public class ExcelWriter {
 		XSSFSheet sheet = workbook.createSheet(sheetname);
 		int rowNum = 0;
 		// System.out.println("Creating excel");
+		Row headrow = sheet.createRow(rowNum++);
+		int colNum = 0;
+		for (String header : IConstants.EXPORT_HEADER) {
+			Cell cell = headrow.createCell(colNum++);
+			cell.setCellValue(header);
+
+		}
+		
 		for (ResultObj obj : result) {
 			Row row = sheet.createRow(rowNum++);
-			int colNum = 0;
+			colNum = 0;
 			List<String> conv_ob = obj.convertObj();
 			for (String field : conv_ob) {
 				Cell cell = row.createCell(colNum++);
@@ -181,7 +209,7 @@ public class ExcelWriter {
 	}
 
 	public static void exportExcelFile(String filename, List<ResultObj> result, String sheetname) {
-		String ext = filename.substring(filename.lastIndexOf("."), filename.length());
+		String ext = filename.substring(filename.lastIndexOf(".")+1, filename.length());
 		switch (ext) {
 
 		case "xls":

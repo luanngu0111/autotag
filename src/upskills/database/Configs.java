@@ -2,6 +2,8 @@ package upskills.database;
 
 import org.hibernate.cfg.Configuration;
 
+import resources.IConstants;
+
 public class Configs {
 	/**
 	 * @param host host name ex: http://hostname
@@ -10,13 +12,14 @@ public class Configs {
 	 * @param password
 	 * @param dbname database name
 	 */
-	public static void setProperties(String host, String port, String username, String password, String dbname)
+	public static Configuration setProperties(String host, String port, String username, String password, String dbname)
 	{
-		Configuration c = new Configuration();
-		String url = "jdbc:mysql://"+host+":"+port+"/"+dbname;
+		Configuration c = new Configuration().configure("/resources/hibernate.cfg.xml");
+		String url = "jdbc:mysql://"+host+":"+port+"/"+dbname+"?autoReconnect=true&useSSL=false";
 		c.setProperty("hibernate.connection.username",username);
 		c.setProperty("hibernate.connection.password",password);
 		c.setProperty("hibernate.connection.url",url);
+		return c;
 	}
 	
 	/**
@@ -25,12 +28,15 @@ public class Configs {
 	 * @param password
 	 * @param dbname database name
 	 */
-	public static void setProperties(String url, String username, String password, String dbname)
+	public static Configuration setProperties(String url, String username, String password, String dbname)
 	{
 		Configuration c = new Configuration();
 		c.setProperty("hibernate.connection.username",username);
 		c.setProperty("hibernate.connection.password",password);
 		c.setProperty("hibernate.connection.url",url);
+		return c;
 	}
+	
+	
 	
 }
