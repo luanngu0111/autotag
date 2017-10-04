@@ -7,6 +7,7 @@ public interface IConstants {
 	public static String PASSWORD = "root";
 	public static String DB_NAME = "recondb";
 	public static String FILE_PATH = "TestResult.xlsx";
+	public static String CSV_SPLIT = "_;_";
 	public static String HEADER_TRADE = "TRADE_NB";
 	public static String HEADER_FAMILY = "FAM";
 	public static String HEADER_GROUP = "GROUP";

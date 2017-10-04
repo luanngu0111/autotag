@@ -19,10 +19,10 @@ public abstract class AbstractHbnDao<T extends Object> implements Dao<T> {
 	// Initialize configuration from hibernate configuration
 	// private Configuration cfg = new
 	// Configuration().configure("/resources/hibernate.cfg.xml");
-	private Configuration cfg = Configs.setProperties(IConstants.HOST_NAME, IConstants.PORT, IConstants.USER_NAME,
+	private static Configuration cfg = Configs.setProperties(IConstants.HOST_NAME, IConstants.PORT, IConstants.USER_NAME,
 			IConstants.PASSWORD, IConstants.DB_NAME);
 	// Create session depend on hibernate configuration
-	private SessionFactory sessionFactory = cfg.buildSessionFactory();
+	private static SessionFactory sessionFactory = cfg.buildSessionFactory();
 
 	private Class<T> domainClass;
 

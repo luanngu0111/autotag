@@ -27,12 +27,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * Class usage is to read some kinds of excel file such as: CSV, XLSX and XLS
  */
 public class ExcelReader {
-	private String csvFile;
-	private BufferedReader br = null;
-	private String line = "";
-	private static String csvSplitBy = "_;_";
-	private String irrelevantColumns;
-	private String filePath;
+
 
 	/** Read CSV file
 	 * @param filename path of name 
@@ -46,7 +41,7 @@ public class ExcelReader {
 		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
 			String line = br.readLine();
 			while (line != null) {
-				String[] cols = line.split(csvSplitBy);
+				String[] cols = line.split(IConstants.CSV_SPLIT);
 				lines.add(cols);
 				line = br.readLine();
 			}
@@ -74,14 +69,14 @@ public class ExcelReader {
 				// from version 4.0
 				if (currentCell.getCellTypeEnum() == CellType.STRING) {
 					str.append(currentCell.getStringCellValue()).append(
-							csvSplitBy);
+							IConstants.CSV_SPLIT);
 				} else if (currentCell.getCellTypeEnum() == CellType.NUMERIC) {
 					str.append(currentCell.getNumericCellValue()).append(
-							csvSplitBy);
+							IConstants.CSV_SPLIT);
 				}
 
 			}
-			lines.add(str.toString().split(csvSplitBy));
+			lines.add(str.toString().split(IConstants.CSV_SPLIT));
 		}
 		return lines;
 	}

@@ -6,15 +6,21 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellRangeUtil;
+import org.apache.poi.ss.util.CellUtil;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import com.sun.prism.paint.Color;
 
 import jxl.Workbook;
 import jxl.write.Label;
@@ -36,8 +42,7 @@ public class ExcelWriter {
 	 * @param result
 	 *            result data with header
 	 */
-	public static void exportXLSFile(String filename, List<String[]> result,
-			boolean isString, String sheetname) {
+	public static void exportXLSFile(String filename, List<String[]> result, boolean isString, String sheetname) {
 		int col_size = 0;
 		// 1. Create an Excel file
 		WritableWorkbook Wbook = null;
@@ -83,8 +88,7 @@ public class ExcelWriter {
 	 * @param result
 	 * @param sheetname
 	 */
-	public static void exportXLSFile(String filename, List<ResultObj> result,
-			String sheetname) {
+	public static void exportXLSFile(String filename, List<ResultObj> result, String sheetname) {
 		int col_size = 0;
 		// 1. Create an Excel file
 		WritableWorkbook Wbook = null;
@@ -130,8 +134,7 @@ public class ExcelWriter {
 	 * @param result
 	 *            result data with header. Datatype List of list of string
 	 */
-	public static void exportXLSXFile(String filename, List<String[]> result,
-			boolean isString, String sheetname) {
+	public static void exportXLSXFile(String filename, List<String[]> result, boolean isString, String sheetname) {
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		XSSFSheet sheet = workbook.createSheet(sheetname);
 		int rowNum = 0;
@@ -163,8 +166,8 @@ public class ExcelWriter {
 		}
 	}
 
-	public static CellStyle formatCell(XSSFWorkbook wb, boolean center,
-			boolean border, boolean color, int color_val) {
+	public static CellStyle formatCell(XSSFWorkbook wb, boolean center, boolean border, boolean color,
+			short color_val) {
 		CellStyle cell_style = wb.createCellStyle();
 		if (center)
 			cell_style.setAlignment(HorizontalAlignment.CENTER);
@@ -174,38 +177,48 @@ public class ExcelWriter {
 			cell_style.setBorderRight(BorderStyle.MEDIUM);
 			cell_style.setBorderLeft(BorderStyle.MEDIUM);
 		}
+		if (color) {
+			cell_style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+			cell_style.setFillBackgroundColor(color_val);
+			
+		}
 		return cell_style;
 	}
 
-	public static CellRangeAddress formatMergedCell(XSSFSheet sheet, CellRangeAddress merged_cell, boolean border, boolean color, int color_val)
-	{
-		RegionUtil.setBorderBottom(BorderStyle.MEDIUM, merged_cell, sheet);
-		RegionUtil.setBorderLeft(BorderStyle.MEDIUM, merged_cell, sheet);
-		RegionUtil.setBorderRight(BorderStyle.MEDIUM, merged_cell, sheet);
-		RegionUtil.setBorderTop(BorderStyle.MEDIUM, merged_cell, sheet);
-		return merged_cell;
+	public static void formatMergedCell(XSSFSheet sheet, Cell cell, CellRangeAddress merged_cell, boolean border,
+			boolean color, int color_val) {
+		if (border) {
+			RegionUtil.setBorderBottom(cell.getCellStyle().getBorderRightEnum(), merged_cell, sheet);
+			RegionUtil.setBorderLeft(cell.getCellStyle().getBorderRightEnum(), merged_cell, sheet);
+			RegionUtil.setBorderRight(cell.getCellStyle().getBorderRightEnum(), merged_cell, sheet);
+			RegionUtil.setBorderTop(cell.getCellStyle().getBorderRightEnum(), merged_cell, sheet);
+		}
 	}
-	public static void exportXLSXFile(String filename, List<ResultObj> result,
-			String sheetname) {
+
+	public static void exportXLSXFile(String filename, List<ResultObj> result, String sheetname) {
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		XSSFSheet sheet = workbook.createSheet(sheetname);
 		int rowNum = 0;
 		System.out.println("Creating excel ... XLsX");
 		// Create header 1
 		CellRangeAddress cra1 = new CellRangeAddress(0, 0, 0, 6);
-		
+
 		sheet.addMergedRegion(cra1);
-		
-		CellRangeAddress cra2 = new CellRangeAddress(0, 0, 7, 17);
+		RegionUtil.setBorderRight(BorderStyle.MEDIUM, cra1, sheet);
+		CellRangeAddress cra2 = new CellRangeAddress(0, 0, 7, 18);
+
 		sheet.addMergedRegion(cra2);
-		
+
 		Row headrow1 = sheet.createRow(rowNum++);
 		Cell cell1 = headrow1.createCell(0);
 		cell1.setCellValue("MisMatch");
-		cell1.setCellStyle(formatCell(workbook, true, true, false, 0));
+		cell1.setCellStyle(formatCell(workbook, true, true, true,  HSSFColor.BLUE_GREY.index));
+//		formatMergedCell(sheet, cell1, cra1, true, false, 0);
+
 		Cell cell2 = headrow1.createCell(7);
 		cell2.setCellValue("Auto-Tagging");
-		cell2.setCellStyle(formatCell(workbook, true, true, false, 0));
+		cell2.setCellStyle(formatCell(workbook, true, true, true, HSSFColor.BRIGHT_GREEN.index));
+//		formatMergedCell(sheet, cell2, cra2, true, false, 0);
 
 		int colNum = 0;
 
@@ -214,7 +227,7 @@ public class ExcelWriter {
 		for (String header : IConstants.EXPORT_HEADER) {
 			Cell cell = headrow.createCell(colNum++);
 			cell.setCellValue(header);
-			cell.setCellStyle(formatCell(workbook, false, true, false, 0));
+			cell.setCellStyle(formatCell(workbook, false, true, false, (short) 0));
 
 		}
 
@@ -226,8 +239,8 @@ public class ExcelWriter {
 				sheet.autoSizeColumn(colNum);
 				Cell cell = row.createCell(colNum++);
 				cell.setCellValue(field);
-				cell.setCellStyle(formatCell(workbook, false, true, false, 0));
-				
+				cell.setCellStyle(formatCell(workbook, false, true, false, (short) 0));
+
 			}
 		}
 		try {
@@ -241,10 +254,8 @@ public class ExcelWriter {
 		}
 	}
 
-	public static void exportExcelFile(String filename, List<String[]> result,
-			boolean isString, String sheetname) {
-		String ext = filename.substring(filename.lastIndexOf("."),
-				filename.length());
+	public static void exportExcelFile(String filename, List<String[]> result, boolean isString, String sheetname) {
+		String ext = filename.substring(filename.lastIndexOf("."), filename.length());
 		switch (ext) {
 
 		case "xls":
@@ -260,10 +271,8 @@ public class ExcelWriter {
 		}
 	}
 
-	public static void exportExcelFile(String filename, List<ResultObj> result,
-			String sheetname) {
-		String ext = filename.substring(filename.lastIndexOf(".") + 1,
-				filename.length());
+	public static void exportExcelFile(String filename, List<ResultObj> result, String sheetname) {
+		String ext = filename.substring(filename.lastIndexOf(".") + 1, filename.length());
 		switch (ext) {
 
 		case "xls":

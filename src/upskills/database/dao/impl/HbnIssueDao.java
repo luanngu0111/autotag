@@ -30,6 +30,8 @@ public class HbnIssueDao extends AbstractHbnDao<Issue> implements IssueDao {
 		}
 		return result;	
 	}
+
+	
 	
 	
 }
