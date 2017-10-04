@@ -12,6 +12,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -176,6 +177,14 @@ public class ExcelWriter {
 		return cell_style;
 	}
 
+	public static CellRangeAddress formatMergedCell(XSSFSheet sheet, CellRangeAddress merged_cell, boolean border, boolean color, int color_val)
+	{
+		RegionUtil.setBorderBottom(BorderStyle.MEDIUM, merged_cell, sheet);
+		RegionUtil.setBorderLeft(BorderStyle.MEDIUM, merged_cell, sheet);
+		RegionUtil.setBorderRight(BorderStyle.MEDIUM, merged_cell, sheet);
+		RegionUtil.setBorderTop(BorderStyle.MEDIUM, merged_cell, sheet);
+		return merged_cell;
+	}
 	public static void exportXLSXFile(String filename, List<ResultObj> result,
 			String sheetname) {
 		XSSFWorkbook workbook = new XSSFWorkbook();
@@ -184,9 +193,12 @@ public class ExcelWriter {
 		System.out.println("Creating excel ... XLsX");
 		// Create header 1
 		CellRangeAddress cra1 = new CellRangeAddress(0, 0, 0, 6);
+		
 		sheet.addMergedRegion(cra1);
+		
 		CellRangeAddress cra2 = new CellRangeAddress(0, 0, 7, 17);
 		sheet.addMergedRegion(cra2);
+		
 		Row headrow1 = sheet.createRow(rowNum++);
 		Cell cell1 = headrow1.createCell(0);
 		cell1.setCellValue("MisMatch");
