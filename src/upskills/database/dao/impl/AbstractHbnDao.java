@@ -33,6 +33,10 @@ public abstract class AbstractHbnDao<T extends Object> implements Dao<T> {
 			return sessionFactory.openSession();
 		}
 	}
+	
+	protected void closeSession(){
+		sessionFactory.close();
+	}
 
 	private Class<T> getDomainClass() {
 		if (domainClass == null) {
