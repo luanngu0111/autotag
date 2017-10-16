@@ -1,5 +1,6 @@
 package upskills.fileexport;
 
+import java.awt.Font;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -166,9 +167,16 @@ public class ExcelWriter {
 		}
 	}
 
-	public static CellStyle formatCell(XSSFWorkbook wb, boolean center, boolean border, boolean color,
+	/** Format border and color background
+	 * @param wb
+	 * @param center
+	 * @param border
+	 * @param color
+	 * @param color_val
+	 * @return
+	 */
+	public static void formatCell(XSSFWorkbook wb, CellStyle cell_style, boolean center, boolean border, boolean color,
 			short color_val) {
-		CellStyle cell_style = wb.createCellStyle();
 		if (center)
 			cell_style.setAlignment(HorizontalAlignment.CENTER);
 		if (border) {
@@ -178,13 +186,20 @@ public class ExcelWriter {
 			cell_style.setBorderLeft(BorderStyle.MEDIUM);
 		}
 		if (color) {
+			
+			cell_style.setFillForegroundColor(color_val);
 			cell_style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-			cell_style.setFillBackgroundColor(color_val);
 			
 		}
-		return cell_style;
 	}
 
+	public static void formatFontCell(XSSFWorkbook wb,CellStyle cell_style)
+	{
+		org.apache.poi.ss.usermodel.Font font_style = wb.createFont();
+		font_style.setBold(true);
+		cell_style.setFont(font_style);
+	}
+	
 	public static void formatMergedCell(XSSFSheet sheet, Cell cell, CellRangeAddress merged_cell, boolean border,
 			boolean color, int color_val) {
 		if (border) {
@@ -202,35 +217,57 @@ public class ExcelWriter {
 		System.out.println("Creating excel ... XLsX");
 		// Create header 1
 		CellRangeAddress cra1 = new CellRangeAddress(0, 0, 0, 6);
-
 		sheet.addMergedRegion(cra1);
-		RegionUtil.setBorderRight(BorderStyle.MEDIUM, cra1, sheet);
+		
 		CellRangeAddress cra2 = new CellRangeAddress(0, 0, 7, 18);
-
 		sheet.addMergedRegion(cra2);
+		
+		CellRangeAddress cra3 = new CellRangeAddress(0, 0, 19, 20);
+		sheet.addMergedRegion(cra3);
 
 		Row headrow1 = sheet.createRow(rowNum++);
 		Cell cell1 = headrow1.createCell(0);
+		CellStyle cell_style1 = workbook.createCellStyle();
+		formatCell(workbook, cell_style1, true, true, true,  HSSFColor.ORANGE.index);
+		formatFontCell(workbook,cell_style1);
 		cell1.setCellValue("MisMatch");
-		cell1.setCellStyle(formatCell(workbook, true, true, true,  HSSFColor.BLUE_GREY.index));
-//		formatMergedCell(sheet, cell1, cra1, true, false, 0);
+		cell1.setCellStyle(cell_style1);
+		formatMergedCell(sheet, cell1, cra1, true, false, 0);
 
 		Cell cell2 = headrow1.createCell(7);
 		cell2.setCellValue("Auto-Tagging");
-		cell2.setCellStyle(formatCell(workbook, true, true, true, HSSFColor.BRIGHT_GREEN.index));
-//		formatMergedCell(sheet, cell2, cra2, true, false, 0);
+		CellStyle cell_style2 = workbook.createCellStyle();
+		formatCell(workbook, cell_style2, true, true, true,  HSSFColor.ROYAL_BLUE.index);
+		formatFontCell(workbook,cell_style2);
+		cell2.setCellStyle(cell_style2);
+		formatMergedCell(sheet, cell2, cra2, true, false, 0);
 
+		
+		Cell cell3 = headrow1.createCell(19);
+		cell3.setCellValue("User Input");
+		CellStyle cell_style3 = workbook.createCellStyle();
+		formatCell(workbook, cell_style3, true, true, true,  HSSFColor.SEA_GREEN.index);
+		formatFontCell(workbook,cell_style3);
+		cell3.setCellStyle(cell_style3);
+		formatMergedCell(sheet, cell3, cra3, true, false, 0);
+		
+		
 		int colNum = 0;
 
 		// Create header 2
 		Row headrow = sheet.createRow(rowNum++);
+		CellStyle cell_head_style = workbook.createCellStyle();
+		formatFontCell(workbook,cell_head_style);
+		formatCell(workbook, cell_head_style, true, true, false,  (short) 0);
 		for (String header : IConstants.EXPORT_HEADER) {
 			Cell cell = headrow.createCell(colNum++);
 			cell.setCellValue(header);
-			cell.setCellStyle(formatCell(workbook, false, true, false, (short) 0));
+			cell.setCellStyle(cell_head_style);
 
 		}
 
+		CellStyle cell_style = workbook.createCellStyle();
+		formatCell(workbook, cell_style, true, true, false,  (short) 0);
 		for (ResultObj obj : result) {
 			Row row = sheet.createRow(rowNum++);
 			colNum = 0;
@@ -239,7 +276,7 @@ public class ExcelWriter {
 				sheet.autoSizeColumn(colNum);
 				Cell cell = row.createCell(colNum++);
 				cell.setCellValue(field);
-				cell.setCellStyle(formatCell(workbook, false, true, false, (short) 0));
+				cell.setCellStyle(cell_style);
 
 			}
 		}
