@@ -135,7 +135,7 @@ public class TagProcess {
 			Trade obj_trade = new Trade();
 			List<Trade> obj_trades = new ArrayList<Trade>();
 			obj_trades = hb_trade_dao.getTradeByNb(trade_number) ;
-			is_trade_exist = (obj_trades != null);
+			is_trade_exist = (obj_trades != null && obj_trades.size()!=0);
 
 			if (is_trade_exist) { // trade exist in Trade table
 				// Initial Trade Object
