@@ -11,27 +11,6 @@ import upskills.database.model.TradeId;
 
 public class HbnTradeDao extends AbstractHbnDao<Trade> implements TradeDao {
 
-
-	private static HbnTradeDao instance;
-	/**
-	 * 
-	 */
-	private HbnTradeDao() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-	
-	public static HbnTradeDao getInstance()
-	{
-		if (instance==null)
-			instance = new HbnTradeDao();
-		return instance;
-	}
-	
-	public void closeCurrentSession()
-	{
-		closeSession();
-	}
 	public List<Trade> getTradeByNb(int nb) {
 		List<Trade> result = null;
 		Session session = getSession();
