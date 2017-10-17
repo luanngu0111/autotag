@@ -32,13 +32,13 @@ public class TagProcess {
 
 	public static void InsertNewTradeIssue(Trade trade)
 	{
-		HbnTradeDao hbn = new HbnTradeDao();
+		HbnTradeDao hbn = HbnTradeDao.getInstance();
 		hbn.create(trade);
 	}
 	
 	public static void InsertNewIssue(Issue issue)
 	{
-		HbnIssueDao hbn = new HbnIssueDao();
+		HbnIssueDao hbn = HbnIssueDao.getInstance();
 		hbn.create(issue);
 	}
 	
@@ -123,11 +123,12 @@ public class TagProcess {
 		List<ResultObj> trade_field = extractMismatchColumn(mm_result);
 		// START loop to read Mismatch file
 		System.out.println("Processing .... ");
+		HbnTradeDao hb_trade_dao = HbnTradeDao.getInstance();
 		for (ResultObj tf : trade_field) {
 			field_name = tf.getField_name();
 			trade_number = tf.getTrade_number();
 			TradeId tradeid = new TradeId(field_name, trade_number);
-			HbnTradeDao hb_trade_dao = new HbnTradeDao();
+			
 			hb_trade_dao.getTradeByNbAndField(tradeid);
 			
 			// Check Trade NB whether to exists in DB
@@ -171,5 +172,6 @@ public class TagProcess {
 		// END loop
 		ExcelWriter.exportExcelFile(IConstants.EXPORT_EXCEL_FILE, results, IConstants.EXCEL_EXPORT_SHEET);
 		System.out.println("Export completed !");
+		hb_trade_dao.closeCurrentSession();
 	}
 }

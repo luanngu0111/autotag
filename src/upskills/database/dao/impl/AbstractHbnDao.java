@@ -34,6 +34,10 @@ public abstract class AbstractHbnDao<T extends Object> implements Dao<T> {
 		}
 	}
 
+	protected void closeSession(){
+		sessionFactory.close();
+	}
+	
 	private Class<T> getDomainClass() {
 		if (domainClass == null) {
 			ParameterizedType thisType = (ParameterizedType) getClass().getGenericSuperclass();

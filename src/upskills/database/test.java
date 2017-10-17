@@ -16,7 +16,7 @@ public class test {
 		List<Trade> trade = new ArrayList<Trade>();
 		TradeId tradeId = new TradeId("PC", 12351);
 
-		HbnTradeDao hbnTradeDao = new HbnTradeDao();
+		HbnTradeDao hbnTradeDao = HbnTradeDao.getInstance();
 
 		trade = hbnTradeDao.getTradeByNb(12351);
 

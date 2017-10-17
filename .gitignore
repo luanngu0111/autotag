@@ -8,6 +8,4 @@ bin/upskills/database/Configs.class
 *.class
 *.class
 *.class
-.classpath
-.settings/org.eclipse.jdt.core.prefs
-.classpath
+

@@ -11,6 +11,30 @@ import upskills.database.model.Trade;
 
 
 public class HbnIssueDao extends AbstractHbnDao<Issue> implements IssueDao {
+	
+	private static HbnIssueDao instance;
+
+	/**
+	 * 
+	 */
+	private HbnIssueDao() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public static HbnIssueDao getInstance()
+	{
+		if (instance == null)
+			instance = new HbnIssueDao();
+		return instance;
+	}
+	
+	public void closeCurrentSession()
+	{
+		closeSession();
+	}
+	
+	
 	//Implement abstract methods of Issue
 	public Issue getIssueById(int id) {
 		Issue result = new Issue();
