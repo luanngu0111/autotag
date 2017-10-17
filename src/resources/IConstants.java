@@ -1,6 +1,6 @@
 package resources;
 
-public interface IConstants {
+public class IConstants {
 	public static String HOST_NAME = "localhost";
 	public static String PORT = "3306";
 	public static String USER_NAME = "root";
