@@ -34,12 +34,14 @@ public class TagProcess {
 	{
 		HbnTradeDao hbn = HbnTradeDao.getInstance();
 		hbn.create(trade);
+		hbn.closeCurrentSession();
 	}
 	
 	public static void InsertNewIssue(Issue issue)
 	{
 		HbnIssueDao hbn = HbnIssueDao.getInstance();
 		hbn.create(issue);
+		hbn.closeCurrentSession();
 	}
 	
 	/** This method is to read mismatch result and extract info about trade and wrong column
