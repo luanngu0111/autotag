@@ -54,7 +54,7 @@ public class ImportTagProcess {
 			int size = tag_result.size();
 			int step = 0;
 			for (String[] row : tag_result) {
-				System.out.println("Importing ... " + step * 100 / size);
+				System.out.println("Importing ... " + step * 100 / size + "%");
 				if (row[0].trim() != "" && (row[0].trim().equals("X") || row[0].trim().equals("Y"))) {
 
 					TradeId trade_id = new TradeId(row[6], Integer.parseInt(row[1]));

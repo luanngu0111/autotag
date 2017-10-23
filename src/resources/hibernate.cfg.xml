@@ -19,6 +19,6 @@
   <property name="hibernate.current_session_context_class">thread</property>
   <mapping resource="upskills/database/model/Issue.hbm.xml"/>
   <mapping resource="upskills/database/model/Trade.hbm.xml"/>
-  <mapping resource="upskills/autotagging/model/TrnHdr.hbm.xml"/>
+  <mapping resource="upskills/database/model/TrnHdr.hbm.xml"/>
  </session-factory>
 </hibernate-configuration>
