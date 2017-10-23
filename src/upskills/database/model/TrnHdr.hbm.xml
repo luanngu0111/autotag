@@ -1,27 +1,23 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-
+                                   "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class name="upskills.autotagging.model.TrnHdr" table="trn_hdr" catalog="recondb" optimistic-lock="version">
-        <composite-id>
-            <key-property name="trnFmly" type="string">
-                <column name="trn_fmly" length="5" />
-            </key-property>
-            <key-property name="trnType" type="string">
-                <column name="trn_type" length="5" />
-            </key-property>
-            <key-property name="trnGrp" type="string">
-                <column name="trn_grp" length="5" />
-            </key-property>
-        </composite-id>
-        <property name="description" type="string">
-            <column name="description" length="100" not-null="true" />
-        </property>       
-    </class>
-    
-    <!--IN HQL MUST USE ENTITY NAMES AND NOT TABLE NAMES -->
-    <query name="getDataByFmly">
-    	<![CDATA[from TrnHdr where trnFmly = :trnFmly]]>
-    </query>
+ <class catalog="recondb" name="upskills.database.model.TrnHdr" table="trn_hdr">
+  <composite-id mapped="false" unsaved-value="undefined">
+   <key-property name="trnFmly" type="string">
+    <column length="5" name="trn_fmly"/>
+   </key-property>
+   <key-property name="trnType" type="string">
+    <column length="5" name="trn_type"/>
+   </key-property>
+   <key-property name="trnGrp" type="string">
+    <column length="5" name="trn_grp"/>
+   </key-property>
+  </composite-id>
+  <property generated="never" lazy="false" name="description" type="string">
+   <column length="100" name="description" not-null="true"/>
+  </property>
+ </class>
+ <!--IN HQL MUST USE ENTITY NAMES AND NOT TABLE NAMES -->
+ <query name="getDataByFmly">from TrnHdr where trnFmly = :trnFmly</query>
 </hibernate-mapping>
