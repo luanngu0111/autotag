@@ -20,21 +20,18 @@ public class DBUtils {
 	{
 		HbnTradeDao hbn = HbnTradeDao.getInstance();
 		hbn.create(trade);
-		hbn.closeCurrentSession();
 	}
 	
 	public static void InsertNewIssue(Issue issue)
 	{
 		HbnIssueDao hbn = HbnIssueDao.getInstance();
 		hbn.create(issue);
-		hbn.closeCurrentSession();
 	}
 	
 	public static Issue GetIssueById(int id)
 	{
 		HbnIssueDao hbn = HbnIssueDao.getInstance();
 		Issue issue= hbn.getIssueById(id);
-		hbn.closeCurrentSession();
 		return issue;
 		
 	}
@@ -42,7 +39,6 @@ public class DBUtils {
 	{
 		HbnTradeDao hbn = HbnTradeDao.getInstance();
 		Trade trade = hbn.getTradeByNbAndField(new TradeId(field, nb));
-		hbn.closeCurrentSession();
 		return trade;
 	}
 	
@@ -50,11 +46,15 @@ public class DBUtils {
 	{
 		HbnTradeDao hbn = HbnTradeDao.getInstance();
 		List<Trade> trades = hbn.getTradeByNb(nb);
-		hbn.closeCurrentSession();
 		return trades;
 		
 	}
 
+	public static void CloseSession()
+	{
+		HbnTradeDao hbn = HbnTradeDao.getInstance();
+		hbn.closeCurrentSession();
+	}
 	/**
 	 * @return List of Family, Group, Type
 	 */
@@ -62,7 +62,6 @@ public class DBUtils {
 	{
 		HbnTrnHdrDao hbn = HbnTrnHdrDao.getInstance() ;
 		List<TrnHdr> list = hbn.getAll();
-		hbn.closeCurrentSession();
 		return list;
 	}
 }

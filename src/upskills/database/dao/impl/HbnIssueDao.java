@@ -39,19 +39,21 @@ public class HbnIssueDao extends AbstractHbnDao<Issue> implements IssueDao {
 	public Issue getIssueById(int id) {
 		Issue result = new Issue();
 		Session session = getSession();
+		List<Issue> list = null;
 		Transaction tx = null;	
 		try {
 			tx = session.beginTransaction();			
-			result = (Issue)session
+			list = (List)session
 					 .getNamedQuery("getIssueById")
-					 .setParameter("ID", id).getResultList().get(0);		
+					 .setParameter("ID", id)
+					 .list();		
 		} catch(Exception e) {
 			e.printStackTrace();
 		}	
 		finally {
 			session.close();
 		}
-		return result;	
+		return list.get(0);	
 	}
 	
 	
