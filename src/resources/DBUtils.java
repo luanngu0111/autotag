@@ -1,6 +1,10 @@
 package resources;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import upskills.database.dao.impl.HbnIssueDao;
 import upskills.database.dao.impl.HbnTradeDao;
@@ -49,7 +53,43 @@ public class DBUtils {
 		return trades;
 		
 	}
+	
+	public static List<Trade> GetAllTrade()
+	{
+		HbnTradeDao hbn = HbnTradeDao.getInstance();
+		List<Trade> trades = hbn.getAll();
+		return trades;
+		
+	}
 
+	/**
+	 * @param criteria : pair data of column and value
+	 * @param is_union : if yes, using OR operator. Otherwise, using AND operator in WHERE clause
+	 * @return
+	 */
+	public static List<Trade> GetTradeByCriteria(HashMap<String,String> criteria, boolean is_union)
+	{
+		Set<Entry<String, String>> entrySet = criteria.entrySet();
+		int size = entrySet.size();
+		int i = 1;
+		StringBuilder sb = new StringBuilder("from Trade where ");
+		for (Entry entry : entrySet) {
+			
+			
+			if (i++ < size)
+				sb.append(entry.getKey() + " = " + entry.getValue() + ((is_union==true)?" OR ":" AND "));
+			else
+				sb.append(entry.getKey() + " = " + entry.getValue());
+			
+		}
+		
+		HbnTradeDao hbn = HbnTradeDao.getInstance();
+		List<Trade> trades = hbn.getTradeByCriteria(sb.toString());
+
+		return trades;
+		
+	}
+	
 	public static void CloseSession()
 	{
 		HbnTradeDao hbn = HbnTradeDao.getInstance();
@@ -64,4 +104,6 @@ public class DBUtils {
 		List<TrnHdr> list = hbn.getAll();
 		return list;
 	}
+	
+	
 }

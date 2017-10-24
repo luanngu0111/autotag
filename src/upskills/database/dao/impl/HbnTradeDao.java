@@ -52,6 +52,23 @@ public class HbnTradeDao extends AbstractHbnDao<Trade> implements TradeDao {
 		return result;	
 	}
 	
+	public List<Trade> getTradeByCriteria(String query_string) {
+		List<Trade> result = null;
+		Session session = getSession();
+		Transaction tx = null;	
+		
+		try {
+			tx = session.beginTransaction();			
+			result = (List)session.createQuery(query_string).list();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}	
+		finally {
+			session.close();
+		}
+		return result;	
+	}
+	
 	public Trade getTradeByNbAndField(TradeId tradeId) {
 		Trade result = null;
 		Session session = getSession();
