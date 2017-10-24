@@ -3,6 +3,7 @@ package upskills.tagprocess;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import resources.IConstants;
@@ -51,10 +52,13 @@ public class TagProcess {
 	public static List<ResultObj> extractMismatchColumn(List<String[]> mm_result) {
 		String[] header = mm_result.get(0);
 		int i = 1;
+		int nb_ind = Arrays.asList(header).indexOf(IConstants.HEADER_TRADE);
 		int fam_ind = Arrays.asList(header).indexOf(IConstants.HEADER_FAMILY);
 		int grp_ind = Arrays.asList(header).indexOf(IConstants.HEADER_GROUP);
 		int typ_ind = Arrays.asList(header).indexOf(IConstants.HEADER_TYPE);
 		int cur_ind = Arrays.asList(header).indexOf(IConstants.HEADER_CURR);
+		int port_ind = Arrays.asList(header).indexOf(IConstants.HEADER_PORT);
+		int ins_ind = Arrays.asList(header).indexOf(IConstants.HEADER_INS);
 		int size = mm_result.size();
 		ResultObj result = null;
 		List<ResultObj> mm_table = new ArrayList<ResultObj>();
@@ -67,24 +71,23 @@ public class TagProcess {
 			for (int j = 0; j < col_size; j++) {
 				String str1 = data1[j];
 				String str2 = data2[j];
-				if (j == 0) {
-					trade_number = (int) Float.parseFloat(str1);
-				} else {
-					/*
-					 * Value is not same and column is not in ignore list
-					 */
-					if (!str1.equals(str2) && !Arrays.asList(IConstants.IGNORE_COLUMN).contains(header[j])) {
-						result = new ResultObj();
-						result.setTrade_number(trade_number);
-						result.setCurrency(data1[cur_ind]);
-						result.setField_name(header[j]);
-						result.setSelected(false);
-						result.setSystematic(false);
-						result.setTrade_family(data1[fam_ind]);
-						result.setTrade_group(data1[grp_ind]);
-						result.setTrade_type(data1[typ_ind]);
-						mm_table.add(result);
-					}
+
+				/*
+				 * Value is not same and column is not in ignore list
+				 */
+				if (!str1.equals(str2) && !Arrays.asList(IConstants.IGNORE_COLUMN).contains(header[j])) {
+					result = new ResultObj();
+					if (nb_ind!=-1) result.setTrade_number((int) Float.parseFloat(data1[nb_ind]));
+					if (cur_ind!=-1) result.setCurrency(data1[cur_ind]);
+					result.setField_name(header[j]);
+					result.setSelected(false);
+					result.setSystematic(false);
+					if (fam_ind!=-1) result.setTrade_family(data1[fam_ind]);
+					if (grp_ind!=-1) result.setTrade_group(data1[grp_ind]);
+					if (typ_ind!=-1) result.setTrade_type(data1[typ_ind]);
+					if (port_ind!=-1) result.setPortfolio(data1[port_ind]);
+					if (ins_ind!=-1) result.setInstrument(data1[ins_ind]);
+					mm_table.add(result);
 				}
 
 			}
@@ -92,9 +95,12 @@ public class TagProcess {
 		return mm_table;
 	}
 	
+	
+	
 	public static void main(String[] args){
+//			MajorProc();
 		try {
-			MajorProc();
+			GetTagByKeyColumn(null);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -110,7 +116,7 @@ public class TagProcess {
 	}
 	
 	@SuppressWarnings("unused")
-	public static void MajorProc() throws IOException {
+	public static void GetTagByTrade() throws IOException {
 		int trade_number = 0;
 		String field_name = "";
 		List<ResultObj> results = new ArrayList<ResultObj>();
@@ -175,5 +181,29 @@ public class TagProcess {
 		ExcelWriter.exportExcelFile(IConstants.EXPORT_EXCEL_FILE, results, IConstants.EXCEL_EXPORT_SHEET);
 		System.out.println("Export completed !");
 		hb_trade_dao.closeCurrentSession();
+	}
+
+	public static void GetTagByKeyColumn(List<String> header_key) throws IOException
+	{
+		HashMap<String, String> hashmap = new HashMap<>();
+		List<String[]> mm_result = new ArrayList<String[]>();
+		if (IConstants.EXCEL_SHEET_ID != -1)
+		{
+			mm_result = ExcelReader.readExcelFile(IConstants.FILE_PATH, IConstants.EXCEL_SHEET_NAME);
+		} else {
+			mm_result = ExcelReader.readExcelFile(IConstants.FILE_PATH, IConstants.EXCEL_SHEET_ID);
+		}
+		
+		List<ResultObj> com_result = extractMismatchColumn(mm_result);
+		
+		int size = com_result.size();
+		for (int i=0; i<size; i++)
+		{
+			ResultObj item = com_result.get(i);
+			System.out.println(item.convertObj());
+			
+		}
+		
+		
 	}
 }

@@ -14,21 +14,21 @@ import upskills.database.model.TradeId;
 import upskills.fileimport.ExcelReader;
 
 /**
- * @author LuanNgu
- * This class present Importing Tag result from User to DB. Base on format of result file of TagProcess. 
+ * @author LuanNgu 
+ * This class present Importing Tag result from User to DB. Base on format of result file of TagProcess.
  */
 public class ImportTagProcess {
 
 	public ImportTagProcess() {
 		// TODO Auto-generated constructor stub
 	}
-	public static void main(String[] args)
-	{
+
+	public static void main(String[] args) {
 		ImportToDb(IConstants.EXPORT_EXCEL_FILE);
-		
+
 	}
-	public static void ImportToDb(String filename) 
-	{
+
+	public static void ImportToDb(String filename) {
 		List<String[]> tag_result = null;
 		try {
 			System.out.println("Reading ... ");
@@ -37,17 +37,16 @@ public class ImportTagProcess {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		/*
 		 * Remove header
 		 */
 		tag_result.remove(1);
 		tag_result.remove(2);
-		
-		if (tag_result != null && tag_result.size()!=0)
-		{
+
+		if (tag_result != null && tag_result.size() != 0) {
 			System.out.println("Start importing to DB ... ");
-			Trade trade =new Trade();
+			Trade trade = new Trade();
 			Issue issue = new Issue();
 			HbnIssueDao hbn_issue = HbnIssueDao.getInstance();
 			HbnTradeDao hbn_trade = HbnTradeDao.getInstance();
@@ -67,16 +66,16 @@ public class ImportTagProcess {
 					trade.setTrnType(row[4]);
 					trade.setTrnStatus("LIVE");
 					int i = 0;
+					int issue_col = Arrays.asList(IConstants.EXPORT_HEADER).indexOf("Issue 1st"); //Get start index of issue columns
 					for (String col : row) {
-						if (i >= 8 && col.trim() != "" && col.trim() != null) {
+						if (i >= issue_col && col.trim() != "" && col.trim() != null) {
 							int id = (int) Double.parseDouble(col);
 							issue = hbn_issue.getIssueById(id);
 							trade.setIssue(issue);
-							if (hbn_trade.getTradeByNbAndField(trade_id) == null){
+							if (hbn_trade.getTradeByNbAndField(trade_id) == null) {
 								hbn_trade.create(trade);
 								System.out.println("Trade and issue imported successfully ! ");
-							}
-							else {
+							} else {
 								System.out.println("Trade and issue have been existed already ");
 							}
 						}
@@ -90,11 +89,10 @@ public class ImportTagProcess {
 			System.out.println("Import successfully ! ");
 			hbn_issue.closeCurrentSession();
 			hbn_trade.closeCurrentSession();
-		}
-		else {
+		} else {
 			System.out.println("Nothing to import");
 		}
-		
+
 	}
 
 }

@@ -8,15 +8,34 @@ import java.util.List;
  * @author LuanNgu Class usage is represent data after
  */
 public class ResultObj {
-	private boolean selected;
-	private int trade_number;
+	protected boolean selected;
+	protected int trade_number;
+	protected String portfolio;
+	protected String instrument;
+
 	private String trade_family;
 	private String trade_group;
 	private String trade_type;
 	private String currency;
-	private String field_name;
-	private boolean systematic;
-	private List<Integer> issues;
+	protected String field_name;
+	protected boolean systematic;
+	protected List<Integer> issues;
+
+	public String getPortfolio() {
+		return portfolio;
+	}
+
+	public void setPortfolio(String portfolio) {
+		this.portfolio = portfolio;
+	}
+
+	public String getInstrument() {
+		return instrument;
+	}
+
+	public void setInstrument(String instrument) {
+		this.instrument = instrument;
+	}
 
 	public boolean isSelected() {
 		return selected;
@@ -106,9 +125,8 @@ public class ResultObj {
 	 * @param systematic
 	 * @param issues
 	 */
-	public ResultObj(boolean selected, int trade_number, String trade_family,
-			String trade_group, String trade_type, String currency,
-			String field_name, boolean systematic, List<Integer> issues) {
+	public ResultObj(boolean selected, int trade_number, String trade_family, String trade_group, String trade_type,
+			String currency, String field_name, boolean systematic, List<Integer> issues) {
 		super();
 		this.selected = selected;
 		this.trade_number = trade_number;
@@ -131,9 +149,8 @@ public class ResultObj {
 	 * @param systematic
 	 * @param issues
 	 */
-	public ResultObj(int trade_number, String trade_family, String trade_group,
-			String trade_type, String currency, String field_name,
-			boolean systematic, List<Integer> issues) {
+	public ResultObj(int trade_number, String trade_family, String trade_group, String trade_type, String currency,
+			String field_name, boolean systematic, List<Integer> issues) {
 		super();
 		this.trade_number = trade_number;
 		this.trade_family = trade_family;
@@ -155,9 +172,8 @@ public class ResultObj {
 	 * @param field_name
 	 * @param systematic
 	 */
-	public ResultObj(boolean selected, int trade_number, String trade_family,
-			String trade_group, String trade_type, String currency,
-			String field_name, boolean systematic) {
+	public ResultObj(boolean selected, int trade_number, String trade_family, String trade_group, String trade_type,
+			String currency, String field_name, boolean systematic) {
 		super();
 		this.selected = selected;
 		this.trade_number = trade_number;
@@ -179,9 +195,8 @@ public class ResultObj {
 	 * @param field_name
 	 * @param systematic
 	 */
-	public ResultObj(int trade_number, String trade_family, String trade_group,
-			String trade_type, String currency, String field_name,
-			boolean systematic) {
+	public ResultObj(int trade_number, String trade_family, String trade_group, String trade_type, String currency,
+			String field_name, boolean systematic) {
 		super();
 		this.trade_number = trade_number;
 		this.trade_family = trade_family;
@@ -201,6 +216,8 @@ public class ResultObj {
 	public List<String> convertObj() {
 		List<String> str_list = new ArrayList<String>();
 		str_list.add(selected ? "X" : " ");
+		str_list.add(portfolio);
+		str_list.add(instrument);
 		str_list.add(String.valueOf(trade_number));
 		str_list.add(trade_family);
 		str_list.add(trade_group);
