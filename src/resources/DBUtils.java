@@ -105,5 +105,14 @@ public class DBUtils {
 		return list;
 	}
 	
+	/**
+	 * @return List of Family, Group, Type
+	 */
+	public static List<TrnHdr> GetDataByFmly(String family)
+	{
+		HbnTrnHdrDao hbn = HbnTrnHdrDao.getInstance() ;
+		List<TrnHdr> list = hbn.getDataByFmly(family);
+		return list;
+	}
 	
 }
