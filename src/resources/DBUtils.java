@@ -77,9 +77,9 @@ public class DBUtils {
 			
 			
 			if (i++ < size)
-				sb.append(entry.getKey() + " = " + entry.getValue() + ((is_union==true)?" OR ":" AND "));
+				sb.append(entry.getKey() + " = '" + entry.getValue() + ((is_union==true)?"' OR ":"' AND "));
 			else
-				sb.append(entry.getKey() + " = " + entry.getValue());
+				sb.append(entry.getKey() + " = '" + entry.getValue()+"'");
 			
 		}
 		

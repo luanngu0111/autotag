@@ -2,7 +2,10 @@ package upskills.tagprocess;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import resources.IConstants;
 
 /**
  * @author LuanNgu Class usage is represent data after
@@ -20,6 +23,15 @@ public class ResultObj {
 	protected String field_name;
 	protected boolean systematic;
 	protected List<Integer> issues;
+
+	public List<Integer> getIssues() {
+		return issues;
+	}
+
+	public void setIssues(List<Integer> issues) {
+		this.issues = issues;
+	}
+	
 
 	public String getPortfolio() {
 		return portfolio;
@@ -111,7 +123,7 @@ public class ResultObj {
 		this.currency = null;
 		this.field_name = null;
 		this.systematic = false;
-		this.issues = null;
+		this.issues = new ArrayList<Integer>();
 	}
 
 	/**
@@ -125,8 +137,9 @@ public class ResultObj {
 	 * @param systematic
 	 * @param issues
 	 */
-	public ResultObj(boolean selected, int trade_number, String trade_family, String trade_group, String trade_type,
-			String currency, String field_name, boolean systematic, List<Integer> issues) {
+	public ResultObj(boolean selected, int trade_number, String trade_family,
+			String trade_group, String trade_type, String currency,
+			String field_name, boolean systematic, List<Integer> issues) {
 		super();
 		this.selected = selected;
 		this.trade_number = trade_number;
@@ -149,8 +162,9 @@ public class ResultObj {
 	 * @param systematic
 	 * @param issues
 	 */
-	public ResultObj(int trade_number, String trade_family, String trade_group, String trade_type, String currency,
-			String field_name, boolean systematic, List<Integer> issues) {
+	public ResultObj(int trade_number, String trade_family, String trade_group,
+			String trade_type, String currency, String field_name,
+			boolean systematic, List<Integer> issues) {
 		super();
 		this.trade_number = trade_number;
 		this.trade_family = trade_family;
@@ -172,8 +186,9 @@ public class ResultObj {
 	 * @param field_name
 	 * @param systematic
 	 */
-	public ResultObj(boolean selected, int trade_number, String trade_family, String trade_group, String trade_type,
-			String currency, String field_name, boolean systematic) {
+	public ResultObj(boolean selected, int trade_number, String trade_family,
+			String trade_group, String trade_type, String currency,
+			String field_name, boolean systematic) {
 		super();
 		this.selected = selected;
 		this.trade_number = trade_number;
@@ -195,8 +210,9 @@ public class ResultObj {
 	 * @param field_name
 	 * @param systematic
 	 */
-	public ResultObj(int trade_number, String trade_family, String trade_group, String trade_type, String currency,
-			String field_name, boolean systematic) {
+	public ResultObj(int trade_number, String trade_family, String trade_group,
+			String trade_type, String currency, String field_name,
+			boolean systematic) {
 		super();
 		this.trade_number = trade_number;
 		this.trade_family = trade_family;
@@ -216,13 +232,17 @@ public class ResultObj {
 	public List<String> convertObj() {
 		List<String> str_list = new ArrayList<String>();
 		str_list.add(selected ? "X" : " ");
+		if (portfolio != null)
 		str_list.add(portfolio);
+		if (instrument != null)
 		str_list.add(instrument);
-		str_list.add(String.valueOf(trade_number));
-		str_list.add(trade_family);
-		str_list.add(trade_group);
-		str_list.add(trade_type);
-		str_list.add(currency);
+		if (trade_number != 0) {
+			str_list.add(String.valueOf(trade_number));
+			str_list.add(trade_family);
+			str_list.add(trade_group);
+			str_list.add(trade_type);
+			str_list.add(currency);
+		}
 		str_list.add(field_name);
 		str_list.add(systematic ? "Y" : "N");
 		if (issues != null) {
@@ -236,6 +256,33 @@ public class ResultObj {
 	}
 
 	public void addIssue(int issue_id) {
+		if (issues==null)
+			issues = new ArrayList<Integer>();
 		this.issues.add(issue_id);
+	}
+	
+	public void addAllIssues(Collection<? extends Integer> collection)
+	{
+		this.issues.addAll(collection);
+	}
+	
+	public Object getValueByName(String field_name)
+	{
+		if (field_name.equals(IConstants.HEADER_CURR))
+			return this.currency;
+		if (field_name.equals(IConstants.HEADER_FAMILY))
+			return this.trade_family;
+		if (field_name.equals(IConstants.HEADER_GROUP))
+			return this.trade_group;
+		if (field_name.equals(IConstants.HEADER_INS))
+			return this.instrument;
+		if (field_name.equals(IConstants.HEADER_PORT))
+			return this.portfolio;
+		if (field_name.equals(IConstants.HEADER_TRADE))
+			return this.trade_number;
+		if (field_name.equals(IConstants.HEADER_TYPE))
+			return this.trade_type;
+			
+		return null;
 	}
 }

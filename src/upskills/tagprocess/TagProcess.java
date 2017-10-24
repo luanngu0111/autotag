@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import resources.DBUtils;
 import resources.IConstants;
 import upskills.database.dao.impl.HbnIssueDao;
 import upskills.database.dao.impl.HbnTradeDao;
@@ -75,18 +78,28 @@ public class TagProcess {
 				/*
 				 * Value is not same and column is not in ignore list
 				 */
-				if (!str1.equals(str2) && !Arrays.asList(IConstants.IGNORE_COLUMN).contains(header[j])) {
+				if (!str1.equals(str2)
+						&& !Arrays.asList(IConstants.IGNORE_COLUMN).contains(
+								header[j])) {
 					result = new ResultObj();
-					if (nb_ind!=-1) result.setTrade_number((int) Float.parseFloat(data1[nb_ind]));
-					if (cur_ind!=-1) result.setCurrency(data1[cur_ind]);
+					if (nb_ind != -1)
+						result.setTrade_number((int) Float
+								.parseFloat(data1[nb_ind]));
+					if (cur_ind != -1)
+						result.setCurrency(data1[cur_ind]);
 					result.setField_name(header[j]);
 					result.setSelected(false);
 					result.setSystematic(false);
-					if (fam_ind!=-1) result.setTrade_family(data1[fam_ind]);
-					if (grp_ind!=-1) result.setTrade_group(data1[grp_ind]);
-					if (typ_ind!=-1) result.setTrade_type(data1[typ_ind]);
-					if (port_ind!=-1) result.setPortfolio(data1[port_ind]);
-					if (ins_ind!=-1) result.setInstrument(data1[ins_ind]);
+					if (fam_ind != -1)
+						result.setTrade_family(data1[fam_ind]);
+					if (grp_ind != -1)
+						result.setTrade_group(data1[grp_ind]);
+					if (typ_ind != -1)
+						result.setTrade_type(data1[typ_ind]);
+					if (port_ind != -1)
+						result.setPortfolio(data1[port_ind]);
+					if (ins_ind != -1)
+						result.setInstrument(data1[ins_ind]);
 					mm_table.add(result);
 				}
 
@@ -100,7 +113,8 @@ public class TagProcess {
 	public static void main(String[] args){
 //			MajorProc();
 		try {
-			GetTagByKeyColumn(null);
+			String[] header = new String[]{"PORTFOLIO", "INSTRUMENT"};
+			GetTagByKeyColumn(Arrays.asList(header));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -178,15 +192,18 @@ public class TagProcess {
 			
 		}
 		// END loop
-		ExcelWriter.exportExcelFile(IConstants.EXPORT_EXCEL_FILE, results, IConstants.EXCEL_EXPORT_SHEET);
+		ExcelWriter.exportExcelFile(IConstants.EXPORT_EXCEL_FILE, results,
+				IConstants.EXCEL_EXPORT_SHEET);
 		System.out.println("Export completed !");
-		hb_trade_dao.closeCurrentSession();
+		// hb_trade_dao.closeCurrentSession();
 	}
 
 	public static void GetTagByKeyColumn(List<String> header_key) throws IOException
 	{
 		HashMap<String, String> hashmap = new HashMap<>();
 		List<String[]> mm_result = new ArrayList<String[]>();
+		List<Trade> obj_trades = new ArrayList<Trade>();
+		List<ResultObj> results = new ArrayList<ResultObj>();
 		if (IConstants.EXCEL_SHEET_ID != -1)
 		{
 			mm_result = ExcelReader.readExcelFile(IConstants.FILE_PATH, IConstants.EXCEL_SHEET_NAME);
@@ -197,13 +214,64 @@ public class TagProcess {
 		List<ResultObj> com_result = extractMismatchColumn(mm_result);
 		
 		int size = com_result.size();
-		for (int i=0; i<size; i++)
+		
+		
+		for (ResultObj item : com_result)
 		{
-			ResultObj item = com_result.get(i);
-			System.out.println(item.convertObj());
+			hashmap.clear();
+			for (String header : header_key)
+			{
+				
+				hashmap.put(header, item.getValueByName(header).toString());
+			}
+			
+			
+			// Check Trade NB whether to exists in DB
+			boolean is_trade_exist = false;
+			Trade obj_trade = new Trade();
+			obj_trades = DBUtils.GetTradeByCriteria(hashmap, false);
+			is_trade_exist = (obj_trades != null && obj_trades.size() != 0);
+			if (is_trade_exist)
+			{
+				hashmap.put("field", item.getField_name());
+				List<Trade> obj_trade_field = DBUtils.GetTradeByCriteria(hashmap, false);
+				Set<Integer> issue = new HashSet<>();
+				if (obj_trade_field != null && obj_trade_field.size()!=0)
+				{
+					issue.clear();
+					for (Trade obj : obj_trade_field)
+					{
+						issue.add(obj.getIssue().getId());
+					}
+					item.addAllIssues(issue);
+					results.add(item);
+				}
+				else
+				{
+					issue.clear();
+					for (Trade obj : obj_trades)
+					{
+						issue.add(obj.getIssue().getId());
+					}
+					item.addAllIssues(issue);
+					results.add(item);
+				}
+			}
+			else 
+			{
+				results.add(item);
+			}
 			
 		}
 		
+		for (ResultObj obj  : results)
+		{
+			System.out.println(obj.convertObj());
+		}
+		ExcelWriter.exportExcelFile(IConstants.EXPORT_EXCEL_FILE, results,
+				IConstants.EXCEL_EXPORT_SHEET);
+		System.out.println("Export completed !");
+		DBUtils.CloseSession();
 		
 	}
 }
