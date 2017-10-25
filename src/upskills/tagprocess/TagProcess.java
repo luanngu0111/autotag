@@ -207,7 +207,7 @@ public class TagProcess {
 			System.out.println(obj.convertObj());
 		}
 		ExcelWriter.exportExcelFile(IConstants.EXPORT_EXCEL_FILE, results,
-				IConstants.EXCEL_EXPORT_SHEET);
+				IConstants.EXCEL_EXPORT_SHEET, Arrays.asList(IConstants.EXPORT_HEADER));
 		System.out.println("Export completed !");
 		// hb_trade_dao.closeCurrentSession();
 		DBUtils.CloseSession();
@@ -284,7 +284,7 @@ public class TagProcess {
 			System.out.println(obj.convertObj());
 		}
 		ExcelWriter.exportExcelFile(IConstants.EXPORT_EXCEL_FILE, results,
-				IConstants.EXCEL_EXPORT_SHEET);
+				IConstants.EXCEL_EXPORT_SHEET,Arrays.asList(IConstants.EXPORT_HEADER_NON_TRADE));
 		System.out.println("Export completed !");
 		DBUtils.CloseSession();
 		

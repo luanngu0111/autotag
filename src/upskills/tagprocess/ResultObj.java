@@ -261,19 +261,19 @@ public class ResultObj {
 	}
 
 	public Object getValueByName(String field_name) {
-		if (field_name.equals(IConstants.HEADER_CURR))
+		if (field_name.equalsIgnoreCase(IConstants.HEADER_CURR))
 			return this.currency;
-		if (field_name.equals(IConstants.HEADER_FAMILY))
+		if (field_name.equalsIgnoreCase(IConstants.HEADER_FAMILY))
 			return this.trade_family;
-		if (field_name.equals(IConstants.HEADER_GROUP))
+		if (field_name.equalsIgnoreCase(IConstants.HEADER_GROUP))
 			return this.trade_group;
-		if (field_name.equals(IConstants.HEADER_INS))
+		if (field_name.equalsIgnoreCase(IConstants.HEADER_INS))
 			return this.instrument;
-		if (field_name.equals(IConstants.HEADER_PORT))
+		if (field_name.equalsIgnoreCase(IConstants.HEADER_PORT))
 			return this.portfolio;
-		if (field_name.equals(IConstants.HEADER_TRADE))
+		if (field_name.equalsIgnoreCase(IConstants.HEADER_TRADE))
 			return this.trade_number;
-		if (field_name.equals(IConstants.HEADER_TYPE))
+		if (field_name.equalsIgnoreCase(IConstants.HEADER_TYPE))
 			return this.trade_type;
 
 		return null;
