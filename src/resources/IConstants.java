@@ -28,4 +28,7 @@ public class IConstants {
 	public static String[] EXPORT_HEADER_NON_TRADE = new String[] { "Selected", "Portfolio", "Instrument", 
 			"Field", "Systematic", "Issue 1st", "Issue 2nd", "Issue 3rd", "Issue 4th", "Issue 5th",
 			"Issue 6th", "Issue 7th", "Issue 8th" ,"Issue 8th" ,"Issue 9th" ,"Issue 10th" , "Issue", "Comment"};
+	public static String[] EXPORT_HEADER_NEUTRAL = new String[] { "Selected", "Field", "Systematic", 
+			"Issue 1st", "Issue 2nd", "Issue 3rd", "Issue 4th", "Issue 5th",
+			"Issue 6th", "Issue 7th", "Issue 8th", "Issue 9th" ,"Issue 10th" , "Issue", "Comment"};
 }

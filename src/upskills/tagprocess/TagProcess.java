@@ -190,9 +190,11 @@ public class TagProcess {
 					obj_result = new ResultObj(false, obj_trades.get(0).getId().getNb(), obj_trades.get(0).getTrnFmly(),
 							obj_trades.get(0).getTrnGrp(), obj_trades.get(0).getTrnType(),
 							obj_trades.get(0).getCurrency(), field_name, false);
+					Set<Integer> issue = new HashSet<>();
 					for (Trade trade : obj_trades) {
-						obj_result.addIssue(trade.getIssue().getId());
+						issue.add(trade.getIssue().getId());
 					}
+					obj_result.addAllIssues(issue);
 					results.add(obj_result);
 				}
 			} else { // trade NOT exist
@@ -210,7 +212,6 @@ public class TagProcess {
 				IConstants.EXCEL_EXPORT_SHEET, Arrays.asList(IConstants.EXPORT_HEADER));
 		System.out.println("Export completed !");
 		// hb_trade_dao.closeCurrentSession();
-		DBUtils.CloseSession();
 	}
 
 	public static void GetTagByKeyColumn(List<String> header_key) throws IOException
@@ -286,7 +287,6 @@ public class TagProcess {
 		ExcelWriter.exportExcelFile(IConstants.EXPORT_EXCEL_FILE, results,
 				IConstants.EXCEL_EXPORT_SHEET,Arrays.asList(IConstants.EXPORT_HEADER_NON_TRADE));
 		System.out.println("Export completed !");
-		DBUtils.CloseSession();
 		
 	}
 }
