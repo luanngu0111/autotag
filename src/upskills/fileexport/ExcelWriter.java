@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.poi.hssf.util.HSSFColor;
@@ -217,13 +218,14 @@ public class ExcelWriter {
 		/*
 		 *  Create header 1
 		 */
-		CellRangeAddress cra1 = new CellRangeAddress(0, 0, 0, 6);
+		int pivot = Arrays.asList(IConstants.EXPORT_HEADER).indexOf("Issue 1st"); // the pivot position to specify where start/end cell is
+		CellRangeAddress cra1 = new CellRangeAddress(0, 0, 0, pivot-1);
 		sheet.addMergedRegion(cra1);
 
-		CellRangeAddress cra2 = new CellRangeAddress(0, 0, 7, 18);
+		CellRangeAddress cra2 = new CellRangeAddress(0, 0, pivot, pivot+10);
 		sheet.addMergedRegion(cra2);
 
-		CellRangeAddress cra3 = new CellRangeAddress(0, 0, 19, 20);
+		CellRangeAddress cra3 = new CellRangeAddress(0, 0, pivot+11, pivot+12);
 		sheet.addMergedRegion(cra3);
 
 		Row headrow1 = sheet.createRow(rowNum++);
@@ -235,7 +237,7 @@ public class ExcelWriter {
 		cell1.setCellStyle(cell_style1);
 		formatMergedCell(sheet, cell1, cra1, true, false, 0);
 
-		Cell cell2 = headrow1.createCell(7);
+		Cell cell2 = headrow1.createCell(pivot);
 		cell2.setCellValue("Auto-Tagging");
 		CellStyle cell_style2 = workbook.createCellStyle();
 		formatCell(workbook, cell_style2, true, true, true, HSSFColor.ROYAL_BLUE.index);
@@ -243,7 +245,7 @@ public class ExcelWriter {
 		cell2.setCellStyle(cell_style2);
 		formatMergedCell(sheet, cell2, cra2, true, false, 0);
 
-		Cell cell3 = headrow1.createCell(19);
+		Cell cell3 = headrow1.createCell(pivot+11);
 		cell3.setCellValue("User Input");
 		CellStyle cell_style3 = workbook.createCellStyle();
 		formatCell(workbook, cell_style3, true, true, true, HSSFColor.SEA_GREEN.index);
@@ -267,6 +269,8 @@ public class ExcelWriter {
 
 		}
 
+		
+		// Export content
 		CellStyle cell_style = workbook.createCellStyle();
 		formatCell(workbook, cell_style, true, true, false, (short) 0);
 		List<String> conv_ob = new ArrayList<String>();
@@ -277,6 +281,8 @@ public class ExcelWriter {
 			conv_ob = obj.convertObj();
 			for (String field : conv_ob) {
 				Cell cell = row.createCell(colNum++);
+				if (field == null)  // if this column doesn't contain value
+					continue;
 				cell.setCellValue(field);
 
 			}

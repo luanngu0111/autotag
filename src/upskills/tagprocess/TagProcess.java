@@ -111,10 +111,10 @@ public class TagProcess {
 	
 	
 	public static void main(String[] args){
-//			MajorProc();
+//			
 		try {
-			String[] header = new String[]{"PORTFOLIO", "INSTRUMENT"};
-			GetTagByKeyColumn(Arrays.asList(header));
+			String[] header = new String[]{};
+			MajorProc(Arrays.asList(header));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -129,7 +129,16 @@ public class TagProcess {
 		}
 	}
 	
-	@SuppressWarnings("unused")
+	public static void MajorProc(List<String> header_key) throws IOException {
+		if (header_key == null || header_key.size() == 0 
+				|| (header_key.size()==1 && header_key.get(0).equals("NB"))) {
+			GetTagByTrade();
+		} else
+		{
+			GetTagByKeyColumn(header_key);
+		}
+	}
+	
 	public static void GetTagByTrade() throws IOException {
 		int trade_number = 0;
 		String field_name = "";
@@ -192,10 +201,16 @@ public class TagProcess {
 			
 		}
 		// END loop
+		
+		for (ResultObj obj  : results)
+		{
+			System.out.println(obj.convertObj());
+		}
 		ExcelWriter.exportExcelFile(IConstants.EXPORT_EXCEL_FILE, results,
 				IConstants.EXCEL_EXPORT_SHEET);
 		System.out.println("Export completed !");
 		// hb_trade_dao.closeCurrentSession();
+		DBUtils.CloseSession();
 	}
 
 	public static void GetTagByKeyColumn(List<String> header_key) throws IOException

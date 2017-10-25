@@ -92,8 +92,12 @@ public class DBUtils {
 	
 	public static void CloseSession()
 	{
-		HbnTradeDao hbn = HbnTradeDao.getInstance();
-		hbn.closeCurrentSession();
+		HbnTradeDao hbn_trade = HbnTradeDao.getInstance();
+		HbnIssueDao hbn_issue = HbnIssueDao.getInstance();
+		HbnTrnHdrDao hbn_hdr = HbnTrnHdrDao.getInstance();
+		hbn_trade.closeCurrentSession();
+		hbn_issue.closeCurrentSession();
+		hbn_hdr.closeCurrentSession();
 	}
 	/**
 	 * @return List of Family, Group, Type

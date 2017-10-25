@@ -31,7 +31,6 @@ public class ResultObj {
 	public void setIssues(List<Integer> issues) {
 		this.issues = issues;
 	}
-	
 
 	public String getPortfolio() {
 		return portfolio;
@@ -137,9 +136,8 @@ public class ResultObj {
 	 * @param systematic
 	 * @param issues
 	 */
-	public ResultObj(boolean selected, int trade_number, String trade_family,
-			String trade_group, String trade_type, String currency,
-			String field_name, boolean systematic, List<Integer> issues) {
+	public ResultObj(boolean selected, int trade_number, String trade_family, String trade_group, String trade_type,
+			String currency, String field_name, boolean systematic, List<Integer> issues) {
 		super();
 		this.selected = selected;
 		this.trade_number = trade_number;
@@ -162,9 +160,8 @@ public class ResultObj {
 	 * @param systematic
 	 * @param issues
 	 */
-	public ResultObj(int trade_number, String trade_family, String trade_group,
-			String trade_type, String currency, String field_name,
-			boolean systematic, List<Integer> issues) {
+	public ResultObj(int trade_number, String trade_family, String trade_group, String trade_type, String currency,
+			String field_name, boolean systematic, List<Integer> issues) {
 		super();
 		this.trade_number = trade_number;
 		this.trade_family = trade_family;
@@ -186,9 +183,8 @@ public class ResultObj {
 	 * @param field_name
 	 * @param systematic
 	 */
-	public ResultObj(boolean selected, int trade_number, String trade_family,
-			String trade_group, String trade_type, String currency,
-			String field_name, boolean systematic) {
+	public ResultObj(boolean selected, int trade_number, String trade_family, String trade_group, String trade_type,
+			String currency, String field_name, boolean systematic) {
 		super();
 		this.selected = selected;
 		this.trade_number = trade_number;
@@ -210,9 +206,8 @@ public class ResultObj {
 	 * @param field_name
 	 * @param systematic
 	 */
-	public ResultObj(int trade_number, String trade_family, String trade_group,
-			String trade_type, String currency, String field_name,
-			boolean systematic) {
+	public ResultObj(int trade_number, String trade_family, String trade_group, String trade_type, String currency,
+			String field_name, boolean systematic) {
 		super();
 		this.trade_number = trade_number;
 		this.trade_family = trade_family;
@@ -232,17 +227,17 @@ public class ResultObj {
 	public List<String> convertObj() {
 		List<String> str_list = new ArrayList<String>();
 		str_list.add(selected ? "X" : " ");
-		if (portfolio != null)
-		str_list.add(portfolio);
-		if (instrument != null)
-		str_list.add(instrument);
-		if (trade_number != 0) {
+//		if (portfolio != null)
+			str_list.add(portfolio);
+//		if (instrument != null)
+			str_list.add(instrument);
+//		if (trade_number != 0) {
 			str_list.add(String.valueOf(trade_number));
 			str_list.add(trade_family);
 			str_list.add(trade_group);
 			str_list.add(trade_type);
 			str_list.add(currency);
-		}
+//		}
 		str_list.add(field_name);
 		str_list.add(systematic ? "Y" : "N");
 		if (issues != null) {
@@ -256,18 +251,16 @@ public class ResultObj {
 	}
 
 	public void addIssue(int issue_id) {
-		if (issues==null)
+		if (issues == null)
 			issues = new ArrayList<Integer>();
 		this.issues.add(issue_id);
 	}
-	
-	public void addAllIssues(Collection<? extends Integer> collection)
-	{
+
+	public void addAllIssues(Collection<? extends Integer> collection) {
 		this.issues.addAll(collection);
 	}
-	
-	public Object getValueByName(String field_name)
-	{
+
+	public Object getValueByName(String field_name) {
 		if (field_name.equals(IConstants.HEADER_CURR))
 			return this.currency;
 		if (field_name.equals(IConstants.HEADER_FAMILY))
@@ -282,7 +275,7 @@ public class ResultObj {
 			return this.trade_number;
 		if (field_name.equals(IConstants.HEADER_TYPE))
 			return this.trade_type;
-			
+
 		return null;
 	}
 }
