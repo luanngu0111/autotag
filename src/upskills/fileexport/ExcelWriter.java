@@ -134,7 +134,8 @@ public class ExcelWriter {
 	 * @param result
 	 *            result data with header. Datatype List of list of string
 	 */
-	public static void exportXLSXFile(String filename, List<String[]> result, boolean isString, String sheetname, List<String> column_header) {
+	public static void exportXLSXFile(String filename, List<String[]> result, boolean isString, String sheetname,
+			List<String> column_header) {
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		XSSFSheet sheet = workbook.createSheet(sheetname);
 		int rowNum = 0;
@@ -223,19 +224,22 @@ public class ExcelWriter {
 		int rowNum = 0;
 		int colNum = 0;
 		System.out.println("Creating excel ... XLsX");
-		int pivot = column_header.indexOf("Issue 1st"); /* the pivot position to specify where start/end cell is */
-
-		if (pivot != -1) {
+		int pivot_start = column_header.indexOf("Issue 1st"); /*
+										 * the pivot position to specify where
+										 * start/end cell is
+										 */
+		int pivot_end = column_header.indexOf("Issue 10th");
+		if (pivot_start != -1) {
 			/*
 			 * Create header 1
 			 */
-			CellRangeAddress cra1 = new CellRangeAddress(0, 0, 0, pivot - 1);
+			CellRangeAddress cra1 = new CellRangeAddress(0, 0, 0, pivot_start - 1);
 			sheet.addMergedRegion(cra1);
 
-			CellRangeAddress cra2 = new CellRangeAddress(0, 0, pivot, pivot + 10);
+			CellRangeAddress cra2 = new CellRangeAddress(0, 0, pivot_start, pivot_end);
 			sheet.addMergedRegion(cra2);
 
-			CellRangeAddress cra3 = new CellRangeAddress(0, 0, pivot + 11, pivot + 12);
+			CellRangeAddress cra3 = new CellRangeAddress(0, 0, pivot_end + 1, pivot_end + 2);
 			sheet.addMergedRegion(cra3);
 
 			Row headrow1 = sheet.createRow(rowNum++);
@@ -247,7 +251,7 @@ public class ExcelWriter {
 			cell1.setCellStyle(cell_style1);
 			formatMergedCell(sheet, cell1, cra1, true, false, 0);
 
-			Cell cell2 = headrow1.createCell(pivot);
+			Cell cell2 = headrow1.createCell(pivot_start);
 			cell2.setCellValue("Auto-Tagging");
 			CellStyle cell_style2 = workbook.createCellStyle();
 			formatCell(workbook, cell_style2, true, true, true, HSSFColor.ROYAL_BLUE.index);
@@ -255,15 +259,13 @@ public class ExcelWriter {
 			cell2.setCellStyle(cell_style2);
 			formatMergedCell(sheet, cell2, cra2, true, false, 0);
 
-			Cell cell3 = headrow1.createCell(pivot + 11);
+			Cell cell3 = headrow1.createCell(pivot_end + 1);
 			cell3.setCellValue("User Input");
 			CellStyle cell_style3 = workbook.createCellStyle();
 			formatCell(workbook, cell_style3, true, true, true, HSSFColor.SEA_GREEN.index);
 			formatFontCell(workbook, cell_style3);
 			cell3.setCellStyle(cell_style3);
 			formatMergedCell(sheet, cell3, cra3, true, false, 0);
-
-			
 
 			/*
 			 * Create header 2
@@ -279,8 +281,7 @@ public class ExcelWriter {
 
 			}
 
-		} else 
-		{
+		} else {
 			/*
 			 * Create header
 			 */
@@ -305,7 +306,8 @@ public class ExcelWriter {
 			conv_ob.clear();
 			conv_ob = obj.convertObj();
 			for (String field : conv_ob) {
-				if (field == null || field.equals("0")) // if this column doesn't contain value
+				if (field == null || field.equals("0")) // if this column
+														// doesn't contain value
 					continue;
 				Cell cell = row.createCell(colNum++);
 				cell.setCellValue(field);
@@ -334,7 +336,8 @@ public class ExcelWriter {
 		}
 	}
 
-	public static void exportExcelFile(String filename, List<String[]> result, boolean isString, String sheetname,List<String> header) {
+	public static void exportExcelFile(String filename, List<String[]> result, boolean isString, String sheetname,
+			List<String> header) {
 		String ext = filename.substring(filename.lastIndexOf("."), filename.length());
 		switch (ext) {
 
@@ -342,7 +345,7 @@ public class ExcelWriter {
 			exportXLSFile(filename, result, true, sheetname);
 			break;
 		case "xlsx":
-			exportXLSXFile(filename, result, true, sheetname,header);
+			exportXLSXFile(filename, result, true, sheetname, header);
 			break;
 
 		default: // Doesn't support file type
