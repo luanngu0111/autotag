@@ -224,7 +224,8 @@ public class ExcelWriter {
 		int rowNum = 0;
 		int colNum = 0;
 		System.out.println("Creating excel ... XLsX");
-		int pivot_start = column_header.indexOf("Issue 1st"); /*
+		int pivot_start = column_header
+				.indexOf("Issue 1st"); /*
 										 * the pivot position to specify where
 										 * start/end cell is
 										 */
@@ -233,10 +234,10 @@ public class ExcelWriter {
 			/*
 			 * Create header 1
 			 */
-			CellRangeAddress cra1 = new CellRangeAddress(0, 0, 0, pivot_start - 1);
+			CellRangeAddress cra1 = new CellRangeAddress(0, 0, 0, pivot_start - 2);
 			sheet.addMergedRegion(cra1);
 
-			CellRangeAddress cra2 = new CellRangeAddress(0, 0, pivot_start, pivot_end);
+			CellRangeAddress cra2 = new CellRangeAddress(0, 0, pivot_start - 1, pivot_end);
 			sheet.addMergedRegion(cra2);
 
 			CellRangeAddress cra3 = new CellRangeAddress(0, 0, pivot_end + 1, pivot_end + 2);
@@ -251,7 +252,7 @@ public class ExcelWriter {
 			cell1.setCellStyle(cell_style1);
 			formatMergedCell(sheet, cell1, cra1, true, false, 0);
 
-			Cell cell2 = headrow1.createCell(pivot_start);
+			Cell cell2 = headrow1.createCell(pivot_start - 1);
 			cell2.setCellValue("Auto-Tagging");
 			CellStyle cell_style2 = workbook.createCellStyle();
 			formatCell(workbook, cell_style2, true, true, true, HSSFColor.ROYAL_BLUE.index);
@@ -306,6 +307,7 @@ public class ExcelWriter {
 			conv_ob.clear();
 			conv_ob = obj.convertObj();
 			for (String field : conv_ob) {
+				
 				if (field == null || field.equals("0")) // if this column
 														// doesn't contain value
 					continue;
@@ -319,7 +321,8 @@ public class ExcelWriter {
 		// Format exported table
 		for (int i = 2; i <= sheet.getLastRowNum(); i++) {
 			Row row = sheet.getRow(i);
-			for (Cell cell : row) {
+			for (Cell cell : row) 
+			{
 				cell.setCellStyle(cell_style);
 			}
 		}

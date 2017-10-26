@@ -16,12 +16,16 @@ public class IConstants {
 	public static String HEADER_INS = "INSTRUMENT";
 	public static String HEADER_STATUS = "TRN_STATUS";
 	public static String HEADER_KEY_VAL = "KeyValue";
-	public static String EXPORT_EXCEL_FILE = "export/ExportTestScene2.xlsx";
+	public static String EXPORT_EXCEL_FILE = "export/ExportTest_2.xlsx";
 	public static String EXCEL_SHEET_NAME = "Result 0";
 	public static String EXCEL_EXPORT_SHEET = "AUTO-TAGGING";
 	public static int EXCEL_SHEET_ID = 2;
 	public static String[] IGNORE_COLUMN = new String[] { "SourceName", "LineNumber" };
 	public static String[] EXPORT_HEADER = new String[] { "Selected", "Trade Number", "Trade Family", "Trade Group", "Trade Type",
+			"Currency", "Field", "Systematic", "Issue 1st", "Issue 2nd", "Issue 3rd", "Issue 4th", "Issue 5th",
+			"Issue 6th", "Issue 7th", "Issue 8th" ,"Issue 9th" ,"Issue 10th" , "Issue", "Comment"};
+	
+	public static String[] EXPORT_HEADER_FULL = new String[] { "Selected", "Portfolio", "Instrument", "Trade Number", "Trade Family", "Trade Group", "Trade Type",
 			"Currency", "Field", "Systematic", "Issue 1st", "Issue 2nd", "Issue 3rd", "Issue 4th", "Issue 5th",
 			"Issue 6th", "Issue 7th", "Issue 8th" ,"Issue 9th" ,"Issue 10th" , "Issue", "Comment"};
 	

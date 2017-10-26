@@ -33,6 +33,16 @@ import upskills.fileimport.ExcelReader;
  */
 public class TagProcess {
 	
+	private static List<String>_export_header = new ArrayList<String>();
+
+	
+	public static List<String> get_export_header() {
+		return _export_header;
+	}
+
+	public static void set_export_header(List<String> _export_header) {
+		TagProcess._export_header = _export_header;
+	}
 
 	public static void InsertNewTradeIssue(Trade trade)
 	{
@@ -53,7 +63,9 @@ public class TagProcess {
 	 * @return list of trade info 
 	 */
 	public static List<ResultObj> extractMismatchColumn(List<String[]> mm_result) {
-		String[] header = mm_result.get(0);
+		String[] header = HeaderMap.MapHeaderToColumn(mm_result.get(0));
+		_export_header.addAll(Arrays.asList(IConstants.EXPORT_HEADER_NEUTRAL));
+		HashMap<Integer,String> flex_head = new HashMap<>();
 		int i = 1;
 		int nb_ind = Arrays.asList(header).indexOf(IConstants.HEADER_TRADE);
 		int fam_ind = Arrays.asList(header).indexOf(IConstants.HEADER_FAMILY);
@@ -82,29 +94,47 @@ public class TagProcess {
 						&& !Arrays.asList(IConstants.IGNORE_COLUMN).contains(
 								header[j])) {
 					result = new ResultObj();
-					if (nb_ind != -1)
-						result.setTrade_number((int) Float
-								.parseFloat(data1[nb_ind]));
-					if (cur_ind != -1)
-						result.setCurrency(data1[cur_ind]);
+					
+					
 					result.setField_name(header[j]);
 					result.setSelected(false);
 					result.setSystematic(false);
-					if (fam_ind != -1)
-						result.setTrade_family(data1[fam_ind]);
-					if (grp_ind != -1)
-						result.setTrade_group(data1[grp_ind]);
-					if (typ_ind != -1)
+					
+					if (cur_ind != -1){
+						result.setCurrency(data1[cur_ind]);
+						flex_head.put(7, "Currency");
+					}
+					if (typ_ind != -1){
 						result.setTrade_type(data1[typ_ind]);
-					if (port_ind != -1)
-						result.setPortfolio(data1[port_ind]);
-					if (ins_ind != -1)
+						flex_head.put(6, "Type");
+					}
+					if (grp_ind != -1){
+						result.setTrade_group(data1[grp_ind]);
+						flex_head.put(5, "Group");
+					}
+					if (fam_ind != -1){
+						result.setTrade_family(data1[fam_ind]);
+						flex_head.put(4, "Family");
+					}
+					if (nb_ind != -1){
+						result.setTrade_number((int) Float
+								.parseFloat(data1[nb_ind]));
+						flex_head.put(3, "Trade Number");
+					}
+					if (ins_ind != -1) {
 						result.setInstrument(data1[ins_ind]);
+						flex_head.put(2, "Instrument");
+					}
+					if (port_ind != -1){
+						result.setPortfolio(data1[port_ind]);
+						flex_head.put(1, "Portfolio");
+					}
 					mm_table.add(result);
 				}
 
 			}
 		}
+		_export_header.addAll(1, flex_head.values());
 		return mm_table;
 	}
 	
@@ -113,7 +143,7 @@ public class TagProcess {
 	public static void main(String[] args){
 //			
 		try {
-			String[] header = new String[]{};
+			String[] header = new String[]{"NB"};
 			MajorProc(Arrays.asList(header));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -131,11 +161,13 @@ public class TagProcess {
 	
 	public static void MajorProc(List<String> header_key) throws IOException {
 		if (header_key == null || header_key.size() == 0 
-				|| (header_key.size()==1 && header_key.get(0).equals("NB"))) {
+				|| (header_key.size()==1 && HeaderMap.MapHeaderToColumn(header_key.get(0)).equals("NB"))) {
 			GetTagByTrade();
 		} else
 		{
-			GetTagByKeyColumn(header_key);
+			List<String> mod_header = new ArrayList<String>();
+			mod_header = HeaderMap.MapHeaderToColumn(header_key);
+			GetTagByKeyColumn(mod_header);
 		}
 	}
 	
@@ -164,7 +196,6 @@ public class TagProcess {
 			
 			// Check Trade NB whether to exists in DB
 			boolean is_trade_exist = false;
-			Trade obj_trade = new Trade();
 			List<Trade> obj_trades = new ArrayList<Trade>();
 			obj_trades = hb_trade_dao.getTradeByNb(trade_number) ;
 			is_trade_exist = (obj_trades != null && obj_trades.size()!=0);
@@ -177,25 +208,18 @@ public class TagProcess {
 
 				if (obj_trade_field != null) { // In case the FIELD exists in
 												// Trades
-					obj_result = new ResultObj(false, obj_trade_field.getId().getNb(), obj_trade_field.getTrnFmly(),
-							obj_trade_field.getTrnGrp(), obj_trade_field.getTrnType(), obj_trade_field.getCurrency(),
-							field_name, true);
-					obj_result.addIssue(obj_trade_field.getIssue().getId());
-					results.add(obj_result);
+					tf.setSystematic(true);
+					tf.addIssue(obj_trade_field.getIssue().getId());
+					results.add(tf);
 
 				} else { // In case the field NOT exists in Trades-Issue info
-					List<String> fields = new ArrayList<String>();
-					obj_trade = obj_trades.get(0);
-					obj_trades = hb_trade_dao.getTradeByNb(trade_number) ;
-					obj_result = new ResultObj(false, obj_trades.get(0).getId().getNb(), obj_trades.get(0).getTrnFmly(),
-							obj_trades.get(0).getTrnGrp(), obj_trades.get(0).getTrnType(),
-							obj_trades.get(0).getCurrency(), field_name, false);
+
 					Set<Integer> issue = new HashSet<>();
 					for (Trade trade : obj_trades) {
 						issue.add(trade.getIssue().getId());
 					}
-					obj_result.addAllIssues(issue);
-					results.add(obj_result);
+					tf.addAllIssues(issue);
+					results.add(tf);
 				}
 			} else { // trade NOT exist
 				results.add(tf);
@@ -209,7 +233,7 @@ public class TagProcess {
 			System.out.println(obj.convertObj());
 		}
 		ExcelWriter.exportExcelFile(IConstants.EXPORT_EXCEL_FILE, results,
-				IConstants.EXCEL_EXPORT_SHEET, Arrays.asList(IConstants.EXPORT_HEADER));
+				IConstants.EXCEL_EXPORT_SHEET, _export_header);
 		System.out.println("Export completed !");
 		// hb_trade_dao.closeCurrentSession();
 	}
@@ -237,7 +261,6 @@ public class TagProcess {
 			hashmap.clear();
 			for (String header : header_key)
 			{
-				
 				hashmap.put(header, item.getValueByName(header).toString());
 			}
 			
@@ -259,6 +282,7 @@ public class TagProcess {
 					{
 						issue.add(obj.getIssue().getId());
 					}
+					item.setSystematic(true);
 					item.addAllIssues(issue);
 					results.add(item);
 				}
@@ -285,7 +309,7 @@ public class TagProcess {
 			System.out.println(obj.convertObj());
 		}
 		ExcelWriter.exportExcelFile(IConstants.EXPORT_EXCEL_FILE, results,
-				IConstants.EXCEL_EXPORT_SHEET,Arrays.asList(IConstants.EXPORT_HEADER_NON_TRADE));
+				IConstants.EXCEL_EXPORT_SHEET,_export_header);
 		System.out.println("Export completed !");
 		
 	}
