@@ -6,8 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
+import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
@@ -17,6 +19,7 @@ import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
+import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTable;
@@ -306,8 +309,9 @@ public class ExcelWriter {
 			colNum = 0;
 			conv_ob.clear();
 			conv_ob = obj.convertObj();
+
 			for (String field : conv_ob) {
-				
+
 				if (field == null || field.equals("0")) // if this column
 														// doesn't contain value
 					continue;
@@ -319,10 +323,10 @@ public class ExcelWriter {
 		}
 
 		// Format exported table
+		System.out.println("...Formating content");
 		for (int i = 2; i <= sheet.getLastRowNum(); i++) {
 			Row row = sheet.getRow(i);
-			for (Cell cell : row) 
-			{
+			for (Cell cell : row) {
 				cell.setCellStyle(cell_style);
 			}
 		}

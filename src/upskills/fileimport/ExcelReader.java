@@ -23,8 +23,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
- * @author Ngu Nguyen
- * Class usage is to read some kinds of excel file such as: CSV, XLSX and XLS
+ * @author Ngu Nguyen Class usage is to read some kinds of excel file such as:
+ *         CSV, XLSX and XLS
  */
 public class ExcelReader {
 	private String csvFile;
@@ -34,14 +34,16 @@ public class ExcelReader {
 	private String irrelevantColumns;
 	private String filePath;
 
-	/** Read CSV file
-	 * @param filename path of name 
-	 * @return Array list of data 
+	/**
+	 * Read CSV file
+	 * 
+	 * @param filename
+	 *            path of name
+	 * @return Array list of data
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public static List<String[]> readCSVFile(String filename)
-			throws FileNotFoundException, IOException {
+	public static List<String[]> readCSVFile(String filename) throws FileNotFoundException, IOException {
 		List<String[]> lines = new ArrayList<>();
 		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
 			String line = br.readLine();
@@ -54,8 +56,11 @@ public class ExcelReader {
 		return lines;
 	}
 
-	/** Read data in sheet of XLSX file
-	 * @param datatypeSheet data type of sheet
+	/**
+	 * Read data in sheet of XLSX file
+	 * 
+	 * @param datatypeSheet
+	 *            data type of sheet
 	 * @return Array list of data in sheet
 	 */
 	private static List<String[]> readSheetXLSX(Sheet datatypeSheet) {
@@ -73,11 +78,15 @@ public class ExcelReader {
 				// getCellTypeEnum ill be renamed to getCellType starting
 				// from version 4.0
 				if (currentCell.getCellTypeEnum() == CellType.STRING) {
-					str.append(currentCell.getStringCellValue()).append(
-							csvSplitBy);
+					str.append(currentCell.getStringCellValue()).append(csvSplitBy);
 				} else if (currentCell.getCellTypeEnum() == CellType.NUMERIC) {
-					str.append(currentCell.getNumericCellValue()).append(
-							csvSplitBy);
+					str.append(currentCell.getNumericCellValue()).append(csvSplitBy);
+				} else if (currentCell.getCellTypeEnum() == CellType.FORMULA) {
+					if (currentCell.getCachedFormulaResultTypeEnum() == CellType.STRING) {
+						str.append(currentCell.getStringCellValue()).append(csvSplitBy);
+					} else if (currentCell.getCachedFormulaResultTypeEnum() == CellType.NUMERIC) {
+						str.append(currentCell.getNumericCellValue()).append(csvSplitBy);
+					}
 				}
 
 			}
@@ -86,14 +95,17 @@ public class ExcelReader {
 		return lines;
 	}
 
-	/** Read a sheet in XLSX file by sheet name
-	 * @param filename path of file
-	 * @param sheetname name of sheet
+	/**
+	 * Read a sheet in XLSX file by sheet name
+	 * 
+	 * @param filename
+	 *            path of file
+	 * @param sheetname
+	 *            name of sheet
 	 * @return Array list of data table
 	 * @throws IOException
 	 */
-	public static List<String[]> readXLSXFile(String filename, String sheetname)
-			throws IOException {
+	public static List<String[]> readXLSXFile(String filename, String sheetname) throws IOException {
 		List<String[]> lines = new ArrayList<>();
 		Workbook workbook = null;
 		try {
@@ -119,14 +131,17 @@ public class ExcelReader {
 
 	}
 
-	/** Read a sheet in XLSX file by index of sheet
-	 * @param filename path of file
-	 * @param sheet_id index of file
+	/**
+	 * Read a sheet in XLSX file by index of sheet
+	 * 
+	 * @param filename
+	 *            path of file
+	 * @param sheet_id
+	 *            index of file
 	 * @return Array list of data table
 	 * @throws IOException
 	 */
-	public static List<String[]> readXLSXFile(String filename, int sheet_id)
-			throws IOException {
+	public static List<String[]> readXLSXFile(String filename, int sheet_id) throws IOException {
 		List<String[]> lines = new ArrayList<>();
 		Workbook workbook = null;
 		try {
@@ -152,12 +167,14 @@ public class ExcelReader {
 
 	}
 
-	/** Read data in a sheet of XLS file
-	 * @param sheet: data type of sheet
+	/**
+	 * Read data in a sheet of XLS file
+	 * 
+	 * @param sheet:
+	 *            data type of sheet
 	 * @return Array LIst of data in sheet
 	 */
-	private static List<String[]> readSheetXLS(jxl.Sheet sheet)
-	{
+	private static List<String[]> readSheetXLS(jxl.Sheet sheet) {
 		List<String[]> lines = new ArrayList<>();
 		int row_num = sheet.getRows();
 		int col_num = sheet.getColumns();
@@ -172,7 +189,10 @@ public class ExcelReader {
 		}
 		return lines;
 	}
-	/** Read a sheet in XLS file by index of sheet
+
+	/**
+	 * Read a sheet in XLS file by index of sheet
+	 * 
 	 * @param filename
 	 * @param sheet_id
 	 * @return Array list of data table
@@ -197,10 +217,14 @@ public class ExcelReader {
 
 		return lines;
 	}
-	
-	/** Read a sheet in XLS file by sheet name
-	 * @param filename: path of file
-	 * @param sheet_name: name of sheet
+
+	/**
+	 * Read a sheet in XLS file by sheet name
+	 * 
+	 * @param filename:
+	 *            path of file
+	 * @param sheet_name:
+	 *            name of sheet
 	 * @return Array list of data table
 	 */
 	public static List<String[]> readXLSFile(String filename, String sheet_name) {
@@ -224,16 +248,18 @@ public class ExcelReader {
 		return lines;
 	}
 
-	/** Read all type of excel file: xlsx, xls, csv
-	 * @param filename: path of file
-	 * @param sheetname: name of sheet 
+	/**
+	 * Read all type of excel file: xlsx, xls, csv
+	 * 
+	 * @param filename:
+	 *            path of file
+	 * @param sheetname:
+	 *            name of sheet
 	 * @return Array list of data table
 	 * @throws IOException
 	 */
-	public static List<String[]> readExcelFile(String filename,
-			String sheetname) throws IOException {
-		String ext = filename.substring(filename.lastIndexOf(".")+1,
-				filename.length());
+	public static List<String[]> readExcelFile(String filename, String sheetname) throws IOException {
+		String ext = filename.substring(filename.lastIndexOf(".") + 1, filename.length());
 		List<String[]> lines = new ArrayList<>();
 		switch (ext) {
 		case "csv":
@@ -253,16 +279,18 @@ public class ExcelReader {
 
 	}
 
-	/** Read all type of excel file : xlsx, xls, csv
-	 * @param filename: path of file
-	 * @param sheet_id: index of sheet
+	/**
+	 * Read all type of excel file : xlsx, xls, csv
+	 * 
+	 * @param filename:
+	 *            path of file
+	 * @param sheet_id:
+	 *            index of sheet
 	 * @return: Array list of data table
 	 * @throws IOException
 	 */
-	public static List<String[]> readExcelFile(String filename,
-			int sheet_id) throws IOException {
-		String ext = filename.substring(filename.lastIndexOf(".")+1,
-				filename.length());
+	public static List<String[]> readExcelFile(String filename, int sheet_id) throws IOException {
+		String ext = filename.substring(filename.lastIndexOf(".") + 1, filename.length());
 		List<String[]> lines = new ArrayList<>();
 		switch (ext) {
 		case "csv":
@@ -281,6 +309,5 @@ public class ExcelReader {
 		return lines;
 
 	}
-	
-	
+
 }
