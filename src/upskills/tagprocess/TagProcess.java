@@ -64,6 +64,7 @@ public class TagProcess {
 	 */
 	public static List<ResultObj> extractMismatchColumn(List<String[]> mm_result) {
 		String[] header = HeaderMap.MapHeaderToColumn(mm_result.get(0));
+		_export_header.clear();
 		_export_header.addAll(Arrays.asList(IConstants.EXPORT_HEADER_NEUTRAL));
 		HashMap<Integer,String> flex_head = new HashMap<>();
 		int i = 1;
