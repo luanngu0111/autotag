@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import resources.DBUtils;
 import resources.IConstants;
 import resources.Utils;
 import upskills.database.dao.impl.HbnIssueDao;
@@ -31,6 +32,7 @@ public class ImportTagProcess {
 
 	public static void ImportToDb(String filename) {
 		List<String[]> tag_result = null;
+		List<Trade> inserted_trades = new ArrayList<Trade>();
 		try {
 			System.out.println("Reading ... ");
 			tag_result = ExcelReader.readXLSXFile(filename, 0);
@@ -63,7 +65,7 @@ public class ImportTagProcess {
 			Trade trade = new Trade();
 			Issue issue = new Issue();
 			HbnIssueDao hbn_issue = HbnIssueDao.getInstance();
-			HbnTradeDao hbn_trade = HbnTradeDao.getInstance();
+			
 			int size = tag_result.size();
 			int step = 0;
 			for (String[] row : tag_result) {
@@ -106,22 +108,36 @@ public class ImportTagProcess {
 							int id = Utils.parseTradeNumber(col);
 							issue = hbn_issue.getIssueById(id);
 							trade.setIssue(issue);
-							if (hbn_trade.getTradeByNbAndField(trade_id) == null) {
-								hbn_trade.create(trade);
-								System.out.println(String.format("%s and %s imported successfully ! ", row[nb_ind],
-										row[field_ind]));
-							} else {
-								System.out.println(String.format("%s and %s have been existed already ", row[nb_ind],
-										row[field_ind]));
-							}
+							inserted_trades.add(trade);
+//							if (hbn_trade.getTradeByNbAndField(trade_id) == null) {
+//								hbn_trade.create(trade);
+//								System.out.println(String.format("%s and %s imported successfully ! ", row[nb_ind],
+//										row[field_ind]));
+//							} else {
+//								System.out.println(String.format("%s and %s have been existed already ", row[nb_ind],
+//										row[field_ind]));
+//							}
 						}
 						i++;
 					}
 
 				}
+				if (step % 10 ==0)
+				{
+					DBUtils.insertTrades(inserted_trades);
+					inserted_trades.clear();
+				}
 				step++;
 
 			}
+//			if (DBUtils.insertTrades(inserted_trades) != -1)
+//			{
+//				System.out.println("Import Sucessfully");
+//			}
+//			else 
+//			{
+//				System.out.println("Import Failed!");
+//			}
 		} else {
 			System.out.println("Nothing to import");
 		}

@@ -119,4 +119,24 @@ public class HbnTradeDao extends AbstractHbnDao<Trade> implements TradeDao {
 		return result;	
 	}
 	
+	public Integer insertTrades(String query_string)
+	{
+		int result = -1;
+		Transaction tx = null;	
+		Session session = getSession();
+		try {			
+			tx = session.beginTransaction();
+			result = (Integer)session
+					.createQuery(query_string.trim())
+					.executeUpdate();
+			tx.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+		}	
+		finally {
+			session.close();
+		}
+		return result;
+	}
 }

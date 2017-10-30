@@ -1,7 +1,6 @@
 package resources;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -117,6 +116,31 @@ public class DBUtils {
 		HbnTrnHdrDao hbn = HbnTrnHdrDao.getInstance() ;
 		List<TrnHdr> list = hbn.getDataByFmly(family);
 		return list;
+	}
+	
+	public static int insertTrades(List<Trade> trades)
+	{
+		int result = -1;
+		HbnTradeDao hbn = HbnTradeDao.getInstance();
+		StringBuilder sb = new StringBuilder();
+		String query = "INSERT INTO `trade`(`NB`,`instrument`,`currency`,`portfolio`,`trn_fmly`,`trn_grp`,`trn_type`,`trn_status`,`field`,`issue_id`) VALUES ";
+		sb.append(query);
+		for (Trade trade: trades){
+		sb.append(String.format("(%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d), \n",
+				trade.getId().getNb(),
+				trade.getInstrument(),
+				trade.getCurrency(),
+				trade.getPortfolio(),
+				trade.getTrnFmly(),
+				trade.getTrnGrp(),
+				trade.getTrnType(),
+				trade.getTrnStatus(),
+				trade.getId().getField(),
+				trade.getIssue().getId()));
+		}
+		sb.deleteCharAt(sb.length()-3);
+		result = hbn.insertTrades(sb.toString());
+		return result;
 	}
 	
 }
