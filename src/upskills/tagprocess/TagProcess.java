@@ -10,6 +10,7 @@ import java.util.Set;
 
 import resources.DBUtils;
 import resources.IConstants;
+import resources.Utils;
 import upskills.database.dao.impl.HbnIssueDao;
 import upskills.database.dao.impl.HbnTradeDao;
 import upskills.database.model.Issue;
@@ -118,8 +119,7 @@ public class TagProcess {
 						flex_head.put(4, "Family");
 					}
 					if (nb_ind != -1){
-						result.setTrade_number((int) Float
-								.parseFloat(data1[nb_ind]));
+						result.setTrade_number(Utils.parseTradeNumber(data1[nb_ind]));
 						flex_head.put(3, "Trade Number");
 					}
 					if (ins_ind != -1) {

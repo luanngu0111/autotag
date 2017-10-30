@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import resources.IConstants;
+import resources.Utils;
 import upskills.database.dao.impl.HbnIssueDao;
 import upskills.database.dao.impl.HbnTradeDao;
 import upskills.database.model.Issue;
@@ -66,13 +67,12 @@ public class ImportTagProcess {
 			int size = tag_result.size();
 			int step = 0;
 			for (String[] row : tag_result) {
-				// System.out.println("Importing ... " + step * 100 / size +
-				// "%");
+				System.out.println("Importing ... " + step * 100 / size + "%");
 				if (row[0].trim() != "" && (row[0].trim().equals("X") || row[0].trim().equals("Y"))) {
 
 					TradeId trade_id = null;
 					if (nb_ind != -1 && field_ind != -1) {
-						trade_id = new TradeId(row[field_ind], Integer.parseInt(row[nb_ind]));
+						trade_id = new TradeId(row[field_ind], Utils.parseTradeNumber(row[nb_ind]));
 						trade.setId(trade_id);
 					}
 					if (cur_ind != -1)
@@ -96,14 +96,14 @@ public class ImportTagProcess {
 					trade.setTrnStatus("LIVE");
 					int i = 0;
 					int issue_col = Arrays.asList(header).indexOf("Issue 1st"); // Get
-																									// start
-																									// index
-																									// of
-																									// issue
-																									// columns
+																				// start
+																				// index
+																				// of
+																				// issue
+																				// columns
 					for (String col : row) {
 						if (i >= issue_col && col.trim() != "" && col.trim() != null) {
-							int id = (int) Double.parseDouble(col);
+							int id = Utils.parseTradeNumber(col);
 							issue = hbn_issue.getIssueById(id);
 							trade.setIssue(issue);
 							if (hbn_trade.getTradeByNbAndField(trade_id) == null) {
