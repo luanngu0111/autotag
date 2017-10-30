@@ -6,7 +6,8 @@ public class IConstants {
 	public static String USER_NAME = "root";
 	public static String PASSWORD = "root";
 	public static String DB_NAME = "recondb";
-	public static String FILE_PATH = "mx2_test2__20171026_125441.xls"; //Scene2_MX2__20171024_165930.xls
+	public static String CSV_SPLIT = "_;_";
+	public static String FILE_PATH = "import/IRD_PL_MX22__20171029_123205.csv"; //Scene2_MX2__20171024_165930.xls
 	public static String HEADER_TRADE = "NB";
 	public static String HEADER_FAMILY = "TRN_FMLY";
 	public static String HEADER_GROUP = "TRN_GRP";
@@ -16,7 +17,7 @@ public class IConstants {
 	public static String HEADER_INS = "INSTRUMENT";
 	public static String HEADER_STATUS = "TRN_STATUS";
 	public static String HEADER_KEY_VAL = "KeyValue";
-	public static String EXPORT_EXCEL_FILE = "export/TestImportTrade_2.xlsx";
+	public static String EXPORT_EXCEL_FILE = "export/TestAutoTag.csv";
 	public static String EXCEL_SHEET_NAME = "Result 0";
 	public static String EXCEL_EXPORT_SHEET = "AUTO-TAGGING";
 	public static int EXCEL_SHEET_ID = 2;

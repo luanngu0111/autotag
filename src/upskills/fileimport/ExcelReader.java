@@ -48,7 +48,7 @@ public class ExcelReader {
 		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
 			String line = br.readLine();
 			while (line != null) {
-				String[] cols = line.split(csvSplitBy);
+				String[] cols = line.split(IConstants.CSV_SPLIT);
 				lines.add(cols);
 				line = br.readLine();
 			}

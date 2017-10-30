@@ -3,11 +3,14 @@ package upskills.fileexport;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.naming.spi.DirStateFactory.Result;
 
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.util.HSSFColor;
@@ -38,6 +41,104 @@ import upskills.tagprocess.ResultObj;
  * 
  */
 public class ExcelWriter {
+
+	private static String csv_splitter = ";";
+
+	public static void setCsv_splitter(String csv_splitter) {
+		ExcelWriter.csv_splitter = csv_splitter;
+	}
+
+	/**
+	 * @param filename
+	 * @param result
+	 * @param header
+	 * @param csvSplit
+	 */
+	public static void exportCSVFile(String filename, List<ResultObj> result, List<String> header, String csvSplit) {
+		FileWriter writer;
+		try {
+			writer = new FileWriter(filename);
+
+			StringBuilder sb = new StringBuilder();
+			if (csvSplit.trim() != "" && csvSplit.trim() != null) {
+				if (header != null && header.size() != 0) {
+					
+					
+					sb.append(String.join(csvSplit, header));
+					sb.append("\n");
+				}
+				for (ResultObj obj : result) {
+					sb.append(String.join(csvSplit,obj.convertObj()));
+					sb.append("\n");
+				}
+			} else {
+				if (header != null && header.size() != 0) {
+					String[] head = (String[]) header.toArray();
+
+					sb.append(String.join(csv_splitter, header));
+					sb.append("\n");
+				}
+				for (ResultObj obj : result) {
+					String[] str = (String[]) obj.convertObj().toArray();
+					sb.append(String.join(csv_splitter,obj.convertObj()));
+					sb.append("\n");
+				}
+			}
+			writer.append(sb.toString());
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
+	/** Export to csv file 
+	 * @param filename
+	 * @param result
+	 * @param header
+	 * @param csvSplit
+	 * @param isString
+	 */
+	public static void exportCSVFile(String filename, List<String[]> result, List<String> header, String csvSplit, boolean isString) {
+		FileWriter writer;
+		try {
+			writer = new FileWriter(filename);
+
+			StringBuilder sb = new StringBuilder();
+			if (csvSplit.trim() != "" && csvSplit.trim() != null) {
+				if (header != null && header.size() != 0) {
+					
+					
+					sb.append(String.join(csvSplit, header));
+					sb.append("\n");
+				}
+				for (String[] obj : result) {
+					sb.append(String.join(csvSplit,obj));
+					sb.append("\n");
+				}
+			} else {
+				if (header != null && header.size() != 0) {
+					String[] head = (String[]) header.toArray();
+
+					sb.append(String.join(csvSplit, header));
+					sb.append("\n");
+				}
+				for (String[] obj : result) {
+					sb.append(String.join(csvSplit,obj));
+					sb.append("\n");
+				}
+			}
+			writer.append(sb.toString());
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 
 	/**
 	 * Export to xls file
@@ -364,7 +465,9 @@ public class ExcelWriter {
 	public static void exportExcelFile(String filename, List<ResultObj> result, String sheetname, List<String> header) {
 		String ext = filename.substring(filename.lastIndexOf(".") + 1, filename.length());
 		switch (ext) {
-
+		case "csv":
+			exportCSVFile(filename, result, header, csv_splitter);
+			break;
 		case "xls":
 			exportXLSFile(filename, result, sheetname);
 			break;
