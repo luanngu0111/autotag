@@ -123,7 +123,7 @@ public class DBUtils {
 		int result = -1;
 		HbnTradeDao hbn = HbnTradeDao.getInstance();
 		StringBuilder sb = new StringBuilder();
-		String query = "INSERT INTO `trade`(`NB`,`instrument`,`currency`,`portfolio`,`trn_fmly`,`trn_grp`,`trn_type`,`trn_status`,`field`,`issue_id`) VALUES ";
+		String query = "INSERT INTO trade (NB,instrument,currency,portfolio,trn_fmly,trn_grp,trn_type,trn_status,field,issue_id) VALUES ";
 		sb.append(query);
 		for (Trade trade: trades){
 		sb.append(String.format("(%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d), \n",

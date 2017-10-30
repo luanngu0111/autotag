@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.exception.ConstraintViolationException;
 
 import upskills.database.dao.TradeDao;
 import upskills.database.model.Trade;
@@ -127,12 +128,12 @@ public class HbnTradeDao extends AbstractHbnDao<Trade> implements TradeDao {
 		try {			
 			tx = session.beginTransaction();
 			result = (Integer)session
-					.createQuery(query_string.trim())
+					.createNativeQuery(query_string.trim())
 					.executeUpdate();
 			tx.commit();
-		} catch(Exception e) {
+		} catch(Exception  e) {
 			e.printStackTrace();
-			tx.rollback();
+//			System.out.println(e.getMessage());
 		}	
 		finally {
 			session.close();

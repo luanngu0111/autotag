@@ -58,7 +58,8 @@ public abstract class AbstractHbnDao<T extends Object> implements Dao<T> {
 			session.save(t);
 			tx.commit();
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+			System.out.println(e.getMessage());
 			tx.rollback();
 		} finally {
 			session.close();
