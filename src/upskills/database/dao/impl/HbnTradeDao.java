@@ -132,8 +132,8 @@ public class HbnTradeDao extends AbstractHbnDao<Trade> implements TradeDao {
 					.executeUpdate();
 			tx.commit();
 		} catch(Exception  e) {
-			e.printStackTrace();
-//			System.out.println(e.getMessage());
+//			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}	
 		finally {
 			session.close();

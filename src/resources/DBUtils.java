@@ -138,7 +138,7 @@ public class DBUtils {
 				trade.getId().getField(),
 				trade.getIssue().getId()));
 		}
-		sb.deleteCharAt(sb.length()-3);
+		sb.deleteCharAt(sb.length()-3).append("ON DUPLICATE KEY UPDATE NB=VALUES(NB), field=VALUES(field)");
 		result = hbn.insertTrades(sb.toString());
 		return result;
 	}

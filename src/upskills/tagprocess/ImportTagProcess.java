@@ -74,7 +74,7 @@ public class ImportTagProcess {
 			int size = tag_result.size();
 			int step = 0;
 			for (String[] row : tag_result) {
-				System.out.println("Fetching ... " + step * 100 / size + "%");
+				System.out.println("Fetching ... " + ++step * 100 / size + "%");
 				Trade trade = new Trade();
 				if (row[0].trim() != ""
 						&& (row[0].trim().equals("X") || row[0].trim().equals(
@@ -106,6 +106,9 @@ public class ImportTagProcess {
 					}
 					if (sts_ind != -1) {
 						trade.setTrnStatus(row[sts_ind]);
+					} else 
+					{
+						trade.setTrnStatus("LIVE");
 					}
 					int i = 0;
 					int issue_col = Arrays.asList(header).indexOf("Issue 1st"); // Get
@@ -128,17 +131,18 @@ public class ImportTagProcess {
 					}
 
 				}
-				step++;
+//				step++;
 
 			}
 			step = 0;
 			size = trade_record.size();
-			Set<Entry<String, Trade>> set = trade_record.entrySet();
-			for (Entry<String, Trade> entry : set) {
-				DBUtils.InsertNewTradeIssue(entry.getValue());
-				System.out
-						.println("Importing ... " + step++ * 100 / size + "%");
-			}
+			List<Trade> trades = new ArrayList<>(trade_record.values());
+			int result = DBUtils.insertTrades(trades);
+			if (result != -1)
+				System.out.println("Importing is successful !");
+			else 
+				System.out.println("Importing failed !");
+			
 		} else {
 			System.out.println("Nothing to import");
 		}
