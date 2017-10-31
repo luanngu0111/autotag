@@ -9,13 +9,13 @@ public class Utils {
 	public static int parseTradeNumber(String str) {
 	    int number = 0;
 	    try {
-	        number = (int) Float.parseFloat(str);
+	        number =  Integer.parseInt(str);
 	    } catch(NumberFormatException e) {
 	        try {
 	            number = (int) Double.parseDouble(str);
 	        } catch(NumberFormatException e1) {
 	            try {
-	                number = Integer.parseInt(str);
+	                number = (int) Float.parseFloat(str);
 	            } catch(NumberFormatException e2) {
 	                try {
 	                    number = (int) Long.parseLong(str);
