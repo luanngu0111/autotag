@@ -24,14 +24,14 @@ public class HeaderMap {
 	private static String[] instrument_head = new String[] { "INSTRUMENT", "M_INSTRUMENT" };
 	private static String[] currency_head = new String[] { "CURRENCY", "TP_FXBASE", "M_TP_FXBASE" };
 
-	public static void addHeader(String[] array, String head)
-	{
+	public static void addHeader(String[] array, String head) {
 		int size = array.length;
-		String[] temp = new String[size+1];
+		String[] temp = new String[size + 1];
 		temp[0] = head;
 		System.arraycopy(array, 0, temp, 1, size);
 		array = temp.clone();
 	}
+
 	public static void addTradeHeader(String head) {
 		int size = trade_number_head.length;
 		String[] temp = new String[size + 1];
@@ -90,36 +90,67 @@ public class HeaderMap {
 
 	public static void exportPreferences(String filename) throws IOException {
 		FileWriter writer = new FileWriter(filename);
-		writer.append("trade_number_head:"+String.join(",",trade_number_head)+"\n");
-		writer.append("family_head:"+String.join(",",family_head)+"\n");
-		writer.append("group_head:"+String.join(",",group_head)+"\n");
-		writer.append("type_head:"+String.join(",",type_head)+"\n");
-		writer.append("portfolio_head:"+String.join(",",portfolio_head)+"\n");
-		writer.append("instrument_head:"+String.join(",",instrument_head)+"\n");
-		writer.append("currency_head:"+String.join(",",currency_head)+"\n");
-		
+		writer.append("trade_number_head:" + String.join(",", trade_number_head) + "\n");
+		writer.append("family_head:" + String.join(",", family_head) + "\n");
+		writer.append("group_head:" + String.join(",", group_head) + "\n");
+		writer.append("type_head:" + String.join(",", type_head) + "\n");
+		writer.append("portfolio_head:" + String.join(",", portfolio_head) + "\n");
+		writer.append("instrument_head:" + String.join(",", instrument_head) + "\n");
+		writer.append("currency_head:" + String.join(",", currency_head) + "\n");
+
 		writer.flush();
 		writer.close();
 
 	}
-	
-	public static void importPreferences(String filename){
+
+	public static void importPreferences(String filename) {
 		BufferedReader br = null;
 		FileReader fr = null;
 		try {
 
-			//br = new BufferedReader(new FileReader(FILENAME));
+			// br = new BufferedReader(new FileReader(FILENAME));
 			fr = new FileReader(filename);
 			br = new BufferedReader(fr);
 
 			String sCurrentLine;
 
 			while ((sCurrentLine = br.readLine()) != null) {
-//				System.out.println(sCurrentLine);
+				// System.out.println(sCurrentLine);
 				String title = sCurrentLine.substring(0, sCurrentLine.indexOf(":"));
-				if (title.equals("trade_number_head"))
-				{
-					
+				if (title.equals("trade_number_head")) {
+					String header = sCurrentLine.substring(sCurrentLine.indexOf(":") + 1, sCurrentLine.length());
+					String[] temp = header.split(",\\s*");
+					trade_number_head = temp;
+				}
+				if (title.equals("family_head")) {
+					String header = sCurrentLine.substring(sCurrentLine.indexOf(":") + 1, sCurrentLine.length());
+					String[] temp = header.split(",\\s*");
+					family_head = temp;
+				}
+				if (title.equals("group_head")) {
+					String header = sCurrentLine.substring(sCurrentLine.indexOf(":") + 1, sCurrentLine.length());
+					String[] temp = header.split(",\\s*");
+					group_head = temp;
+				}
+				if (title.equals("type_head")) {
+					String header = sCurrentLine.substring(sCurrentLine.indexOf(":") + 1, sCurrentLine.length());
+					String[] temp = header.split(",\\s*");
+					type_head = temp;
+				}
+				if (title.equals("portfolio_head")) {
+					String header = sCurrentLine.substring(sCurrentLine.indexOf(":") + 1, sCurrentLine.length());
+					String[] temp = header.split(",\\s*");
+					portfolio_head = temp;
+				}
+				if (title.equals("instrument_head")) {
+					String header = sCurrentLine.substring(sCurrentLine.indexOf(":") + 1, sCurrentLine.length());
+					String[] temp = header.split(",\\s*");
+					instrument_head = temp;
+				}
+				if (title.equals("currency_head")) {
+					String header = sCurrentLine.substring(sCurrentLine.indexOf(":") + 1, sCurrentLine.length());
+					String[] temp = header.split(",\\s*");
+					currency_head = temp;
 				}
 			}
 
@@ -142,15 +173,6 @@ public class HeaderMap {
 				ex.printStackTrace();
 
 			}
-		}
-	}
-
-	public static void main(String[] args) {
-		try {
-			exportPreferences("export/Preferences.data");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 

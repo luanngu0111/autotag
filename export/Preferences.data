@@ -1,4 +1,4 @@
-trade_number_head:NB,TRN_NB,M_NB
+trade_number_head:NB,TRN_NB,M_NB, Trade number
 family_head:FAM,FAMILY,TRN_FMLY,M_TRN_FMLY
 group_head:GROUP,TRN_GRP,M_TRN_GRP
 type_head:TYPE,TYP,TRN_TYPE,M_TRN_TYPE
