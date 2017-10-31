@@ -1,0 +1,7 @@
+trade_number_head:NB,TRN_NB,M_NB
+family_head:FAM,FAMILY,TRN_FMLY,M_TRN_FMLY
+group_head:GROUP,TRN_GRP,M_TRN_GRP
+type_head:TYPE,TYP,TRN_TYPE,M_TRN_TYPE
+portfolio_head:PORT,PORTFOLIO,TP_PFOLIO,M_TP_PFOLIO
+instrument_head:INSTRUMENT,M_INSTRUMENT
+currency_head:CURRENCY,TP_FXBASE,M_TP_FXBASE
