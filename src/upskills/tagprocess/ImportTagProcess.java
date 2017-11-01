@@ -29,11 +29,16 @@ public class ImportTagProcess {
 	}
 
 	public static void main(String[] args) {
-		ImportToDb(IConstants.EXPORT_EXCEL_FILE);
+		try {
+			ImportToDb(IConstants.EXPORT_EXCEL_FILE);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
-	public static void ImportToDb(String filename) {
+	public static void ImportToDb(String filename) throws Exception {
 		List<String[]> tag_result = null;
 		List<Trade> inserted_trades = new ArrayList<Trade>();
 		HashMap<String, Trade> trade_record = new HashMap<String, Trade>();
@@ -74,7 +79,7 @@ public class ImportTagProcess {
 			int size = tag_result.size();
 			int step = 0;
 			for (String[] row : tag_result) {
-				System.out.println("Fetching ... " + ++step * 100 / size + "%");
+				System.out.println("Fetching ... " + ++step * 100 / size + "% of " + size);
 				Trade trade = new Trade();
 				if (row[0].trim() != ""
 						&& (row[0].trim().equals("X") || row[0].trim().equals(
@@ -131,7 +136,6 @@ public class ImportTagProcess {
 					}
 
 				}
-//				step++;
 
 			}
 			step = 0;

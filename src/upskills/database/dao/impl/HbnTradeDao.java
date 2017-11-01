@@ -13,6 +13,7 @@ import upskills.database.model.TradeId;
 public class HbnTradeDao extends AbstractHbnDao<Trade> implements TradeDao {
 
 	private static HbnTradeDao instance;
+
 	/**
 	 * 
 	 */
@@ -20,124 +21,100 @@ public class HbnTradeDao extends AbstractHbnDao<Trade> implements TradeDao {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
-	public static HbnTradeDao getInstance()
-	{
-		if (instance==null)
+
+	public static HbnTradeDao getInstance() {
+		if (instance == null)
 			instance = new HbnTradeDao();
 		return instance;
 	}
-	
-	public void closeCurrentSession()
-	{
+
+	public void closeCurrentSession() {
 		closeSession();
 	}
-	
+
 	public List<Trade> getTradeByNb(int nb) {
 		List<Trade> result = null;
 		Session session = getSession();
-		Transaction tx = null;	
-		
+		Transaction tx = null;
+
 		try {
-			tx = session.beginTransaction();			
-			result = (List)session
-					 .getNamedQuery("getTradeByNb")
-					 .setParameter("NB", nb)					
-					 .list();		
-		} catch(Exception e) {
+			tx = session.beginTransaction();
+			result = (List) session.getNamedQuery("getTradeByNb").setParameter("NB", nb).list();
+		} catch (Exception e) {
 			e.printStackTrace();
-		}	
-		finally {
+		} finally {
 			session.close();
 		}
-		return result;	
+		return result;
 	}
-	
+
 	public List<Trade> getTradeByCriteria(String query_string) {
 		List<Trade> result = null;
 		Session session = getSession();
-		Transaction tx = null;	
-		
+		Transaction tx = null;
+
 		try {
-			tx = session.beginTransaction();			
-			result = (List)session.createQuery(query_string).list();
-		} catch(Exception e) {
+			tx = session.beginTransaction();
+			result = (List) session.createQuery(query_string).list();
+		} catch (Exception e) {
 			e.printStackTrace();
-		}	
-		finally {
+		} finally {
 			session.close();
 		}
-		return result;	
+		return result;
 	}
-	
+
 	public Trade getTradeByNbAndField(TradeId tradeId) {
 		Trade result = null;
 		Session session = getSession();
-		Transaction tx = null;	
-		
+		Transaction tx = null;
+
 		try {
-			tx = session.beginTransaction();			
-			result = (Trade)session
-					 .getNamedQuery("getTradeByNbAndField")
-					 .setParameter("NB", tradeId.getNb())
-					 .setParameter("field", tradeId.getField().trim())
-					 .uniqueResult();		
-		} catch(Exception e) {
+			tx = session.beginTransaction();
+			result = (Trade) session.getNamedQuery("getTradeByNbAndField").setParameter("NB", tradeId.getNb())
+					.setParameter("field", tradeId.getField().trim()).uniqueResult();
+		} catch (Exception e) {
 			e.printStackTrace();
-		}	
-		finally {
+		} finally {
 			session.close();
 		}
-		return result;	
+		return result;
 	}
-	
+
 	/**
-	 * Delete a row in trade table
-	 * Return
-	 * 		 > 0 : delete sucessful
-	 * 		 = 0 : delete fail
+	 * Delete a row in trade table Return > 0 : delete sucessful = 0 : delete
+	 * fail
 	 */
 	public Integer deleteTradeByKey(TradeId tradeId) {
 		int result = -1;
-		Transaction tx = null;	
+		Transaction tx = null;
 		Session session = getSession();
-		
-		try {			
+
+		try {
 			tx = session.beginTransaction();
-			result = (Integer)session
-					.getNamedQuery("deleteTradeByKey")
-					.setParameter("NB", tradeId.getNb())
-					.setParameter("field", tradeId.getField().trim())
-					.executeUpdate();
+			result = (Integer) session.getNamedQuery("deleteTradeByKey").setParameter("NB", tradeId.getNb())
+					.setParameter("field", tradeId.getField().trim()).executeUpdate();
 			tx.commit();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			tx.rollback();
-		}	
-		finally {
+		} finally {
 			session.close();
 		}
-		return result;	
+		return result;
 	}
-	
-	public Integer insertTrades(String query_string)
-	{
+
+	public Integer insertTrades(String query_string) throws Exception {
 		int result = -1;
-		Transaction tx = null;	
+		Transaction tx = null;
 		Session session = getSession();
-		try {			
-			tx = session.beginTransaction();
-			result = (Integer)session
-					.createNativeQuery(query_string.trim())
-					.executeUpdate();
-			tx.commit();
-		} catch(Exception  e) {
-//			e.printStackTrace();
-			System.out.println(e.getMessage());
-		}	
-		finally {
-			session.close();
-		}
+
+		tx = session.beginTransaction();
+		result = (Integer) session.createNativeQuery(query_string.trim()).executeUpdate();
+		tx.commit();
+
+		session.close();
+
 		return result;
 	}
 }

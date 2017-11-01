@@ -118,7 +118,7 @@ public class DBUtils {
 		return list;
 	}
 	
-	public static int insertTrades(List<Trade> trades)
+	public static int insertTrades(List<Trade> trades) throws Exception
 	{
 		int result = -1;
 		HbnTradeDao hbn = HbnTradeDao.getInstance();
