@@ -121,6 +121,8 @@ public class DBUtils {
 	public static int insertTrades(List<Trade> trades) throws Exception
 	{
 		int result = -1;
+		if (trades==null || trades.size()==0)
+			return -1;
 		HbnTradeDao hbn = HbnTradeDao.getInstance();
 		StringBuilder sb = new StringBuilder();
 		String query = "INSERT INTO trade (NB,instrument,currency,portfolio,trn_fmly,trn_grp,trn_type,trn_status,field,issue_id) VALUES ";
@@ -138,7 +140,7 @@ public class DBUtils {
 				trade.getId().getField(),
 				trade.getIssue().getId()));
 		}
-		sb.deleteCharAt(sb.length()-3).append("ON DUPLICATE KEY UPDATE NB=VALUES(NB), field=VALUES(field)");
+		sb.deleteCharAt(sb.lastIndexOf(",")).append("ON DUPLICATE KEY UPDATE NB=VALUES(NB), field=VALUES(field)");
 		result = hbn.insertTrades(sb.toString());
 		return result;
 	}

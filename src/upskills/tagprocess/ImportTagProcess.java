@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import resources.AutoLogger;
 import resources.DBUtils;
 import resources.IConstants;
 import resources.Utils;
@@ -39,6 +40,7 @@ public class ImportTagProcess {
 	}
 
 	public static void ImportToDb(String filename) throws Exception {
+		AutoLogger log = AutoLogger.getInstance();
 		List<String[]> tag_result = null;
 		List<Trade> inserted_trades = new ArrayList<Trade>();
 		HashMap<String, Trade> trade_record = new HashMap<String, Trade>();
@@ -48,6 +50,7 @@ public class ImportTagProcess {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			log.writeInLog(Arrays.toString(e.getStackTrace()));
 		}
 
 		/*
@@ -62,8 +65,7 @@ public class ImportTagProcess {
 		int port_ind = Arrays.asList(header).indexOf("Portfolio");
 		int ins_ind = Arrays.asList(header).indexOf("Instrument");
 		int sts_ind = Arrays.asList(header).indexOf("Status");
-		int field_ind = Arrays.asList(header).indexOf(
-				IConstants.EXPORT_HEADER_NEUTRAL[1]);
+		int field_ind = Arrays.asList(header).indexOf(IConstants.EXPORT_HEADER_NEUTRAL[1]);
 
 		/*
 		 * Remove header
@@ -78,17 +80,15 @@ public class ImportTagProcess {
 
 			int size = tag_result.size();
 			int step = 0;
+
 			for (String[] row : tag_result) {
 				System.out.println("Fetching ... " + ++step * 100 / size + "% of " + size);
 				Trade trade = new Trade();
-				if (row[0].trim() != ""
-						&& (row[0].trim().equals("X") || row[0].trim().equals(
-								"Y"))) {
+				if (row[0].trim() != "" && (row[0].trim().equals("X") || row[0].trim().equals("Y"))) {
 
 					TradeId trade_id = new TradeId();
 					if (nb_ind != -1 && field_ind != -1) {
-						trade_id = new TradeId(row[field_ind],
-								Utils.parseTradeNumber(row[nb_ind]));
+						trade_id = new TradeId(row[field_ind], Utils.parseTradeNumber(row[nb_ind]));
 						trade.setId(trade_id);
 					}
 					if (cur_ind != -1)
@@ -111,8 +111,7 @@ public class ImportTagProcess {
 					}
 					if (sts_ind != -1) {
 						trade.setTrnStatus(row[sts_ind]);
-					} else 
-					{
+					} else {
 						trade.setTrnStatus("LIVE");
 					}
 					int i = 0;
@@ -123,14 +122,12 @@ public class ImportTagProcess {
 																				// issue
 																				// columns
 					for (String col : row) {
-						if (i >= issue_col && col.trim() != ""
-								&& col.trim() != null) {
+						if (i >= issue_col && col.trim() != "" && col.trim() != null) {
 							int id = Utils.parseTradeNumber(col);
 							Issue issue = new Issue();
 							issue = hbn_issue.getIssueById(id);
 							trade.setIssue(issue);
-							trade_record.put(trade_id.getField() + "-"
-									+ trade_id.getNb(), trade);
+							trade_record.put(trade_id.getField() + "-" + trade_id.getNb(), trade);
 						}
 						i++;
 					}
@@ -144,9 +141,11 @@ public class ImportTagProcess {
 			int result = DBUtils.insertTrades(trades);
 			if (result != -1)
 				System.out.println("Importing is successful !");
-			else 
+			else {
 				System.out.println("Importing failed !");
-			
+				log.error("Importing failed !");
+			}
+
 		} else {
 			System.out.println("Nothing to import");
 		}

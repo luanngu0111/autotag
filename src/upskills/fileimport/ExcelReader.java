@@ -11,16 +11,16 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import jxl.read.biff.BiffException;
-import resources.IConstants;
-import upskills.tagprocess.ResultObj;
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import jxl.read.biff.BiffException;
+import resources.AutoLogger;
+import resources.IConstants;
 
 /**
  * @author Ngu Nguyen Class usage is to read some kinds of excel file such as:
@@ -107,6 +107,7 @@ public class ExcelReader {
 	 */
 	public static List<String[]> readXLSXFile(String filename, String sheetname) throws IOException {
 		List<String[]> lines = new ArrayList<>();
+		AutoLogger log = AutoLogger.getInstance();
 		Workbook workbook = null;
 		try {
 
@@ -119,8 +120,10 @@ public class ExcelReader {
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			log.writeInLog(Arrays.toString(e.getStackTrace()));
 		} catch (IOException e) {
 			e.printStackTrace();
+			log.writeInLog(Arrays.toString(e.getStackTrace()));
 		} finally {
 			if (workbook != null) {
 				workbook.close();
@@ -144,6 +147,7 @@ public class ExcelReader {
 	public static List<String[]> readXLSXFile(String filename, int sheet_id) throws IOException {
 		List<String[]> lines = new ArrayList<>();
 		Workbook workbook = null;
+		AutoLogger log = AutoLogger.getInstance();
 		try {
 
 			FileInputStream excelFile = new FileInputStream(new File(filename));
@@ -155,8 +159,10 @@ public class ExcelReader {
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			log.writeInLog(Arrays.toString(e.getStackTrace()));
 		} catch (IOException e) {
 			e.printStackTrace();
+			log.writeInLog(Arrays.toString(e.getStackTrace()));
 		} finally {
 			if (workbook != null) {
 				workbook.close();
@@ -200,6 +206,7 @@ public class ExcelReader {
 	public static List<String[]> readXLSFile(String filename, int sheet_id) {
 		jxl.Workbook workbook = null;
 		List<String[]> lines = new ArrayList<>();
+		AutoLogger log = AutoLogger.getInstance();
 		try {
 			workbook = jxl.Workbook.getWorkbook(new File(filename));
 			jxl.Sheet sheet = workbook.getSheet(sheet_id);
@@ -207,8 +214,10 @@ public class ExcelReader {
 
 		} catch (IOException e) {
 			e.printStackTrace();
+			log.writeInLog(Arrays.toString(e.getStackTrace()));
 		} catch (BiffException e) {
 			e.printStackTrace();
+			log.writeInLog(Arrays.toString(e.getStackTrace()));
 		} finally {
 			if (workbook != null) {
 				workbook.close();
@@ -230,6 +239,7 @@ public class ExcelReader {
 	public static List<String[]> readXLSFile(String filename, String sheet_name) {
 		jxl.Workbook workbook = null;
 		List<String[]> lines = new ArrayList<>();
+		AutoLogger log = AutoLogger.getInstance();
 		try {
 			workbook = jxl.Workbook.getWorkbook(new File(filename));
 			jxl.Sheet sheet = workbook.getSheet(sheet_name);
@@ -237,8 +247,10 @@ public class ExcelReader {
 
 		} catch (IOException e) {
 			e.printStackTrace();
+			log.writeInLog(Arrays.toString(e.getStackTrace()));
 		} catch (BiffException e) {
 			e.printStackTrace();
+			log.writeInLog(Arrays.toString(e.getStackTrace()));
 		} finally {
 			if (workbook != null) {
 				workbook.close();

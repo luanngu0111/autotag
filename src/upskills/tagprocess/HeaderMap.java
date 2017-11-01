@@ -25,6 +25,8 @@ public class HeaderMap {
 	private static String[] currency_head = new String[] { "CURRENCY", "TP_FXBASE", "M_TP_FXBASE" };
 
 	public static void addHeader(String[] array, String head) {
+		if (head.trim().equals(""))
+			return;
 		int size = array.length;
 		String[] temp = new String[size + 1];
 		temp[0] = head;
@@ -33,6 +35,8 @@ public class HeaderMap {
 	}
 
 	public static void addTradeHeader(String head) {
+		if (head.trim().equals(""))
+			return;
 		int size = trade_number_head.length;
 		String[] temp = new String[size + 1];
 		temp[0] = head;
@@ -41,6 +45,8 @@ public class HeaderMap {
 	}
 
 	public static void addFmlyHeader(String head) {
+		if (head.trim().equals(""))
+			return;
 		int size = family_head.length;
 		String[] temp = new String[size + 1];
 		temp[0] = head;
@@ -49,6 +55,8 @@ public class HeaderMap {
 	}
 
 	public static void addGrpHeader(String head) {
+		if (head.trim().equals(""))
+			return;
 		int size = group_head.length;
 		String[] temp = new String[size + 1];
 		temp[0] = head;
@@ -57,6 +65,8 @@ public class HeaderMap {
 	}
 
 	public static void addTypeHeader(String head) {
+		if (head.trim().equals(""))
+			return;
 		int size = type_head.length;
 		String[] temp = new String[size + 1];
 		temp[0] = head;
@@ -65,6 +75,8 @@ public class HeaderMap {
 	}
 
 	public static void addPortHeader(String head) {
+		if (head.trim().equals(""))
+			return;
 		int size = portfolio_head.length;
 		String[] temp = new String[size + 1];
 		temp[0] = head;
@@ -73,6 +85,8 @@ public class HeaderMap {
 	}
 
 	public static void addInstrumentHeader(String head) {
+		if (head.trim().equals(""))
+			return;
 		int size = instrument_head.length;
 		String[] temp = new String[size + 1];
 		temp[0] = head;
@@ -81,6 +95,8 @@ public class HeaderMap {
 	}
 
 	public static void addCurrHeader(String head) {
+		if (head.trim().equals(""))
+			return;
 		int size = currency_head.length;
 		String[] temp = new String[size + 1];
 		temp[0] = head;

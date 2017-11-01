@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import logger.impl.AutotagLogger;
+import resources.AutoLogger;
 import resources.DBUtils;
 import resources.IConstants;
 import resources.Utils;
@@ -144,7 +146,7 @@ public class TagProcess {
 	public static void main(String[] args){
 //			
 		try {
-			String[] header = new String[]{"NB"};
+			String[] header = new String[]{"PORTFOLIO", "INSTRUMENT"};
 			MajorProc(Arrays.asList(header));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -173,8 +175,12 @@ public class TagProcess {
 	}
 	
 	public static void GetTagByTrade() throws IOException {
+		
+		// Init variable
+		AutoLogger log = AutoLogger.getInstance();
 		int trade_number = 0;
 		String field_name = "";
+		
 		List<ResultObj> results = new ArrayList<ResultObj>();
 		ResultObj obj_result = null;
 		List<String[]> mm_result = new ArrayList<String[]>();
@@ -187,6 +193,7 @@ public class TagProcess {
 		List<ResultObj> trade_field = extractMismatchColumn(mm_result);
 		// START loop to read Mismatch file
 		System.out.println("Processing .... ");
+		log.initLogFile();
 		HbnTradeDao hb_trade_dao = HbnTradeDao.getInstance();
 		for (ResultObj tf : trade_field) {
 			field_name = tf.getField_name();
@@ -229,10 +236,10 @@ public class TagProcess {
 		}
 		// END loop
 		
-		for (ResultObj obj  : results)
+		/*for (ResultObj obj  : results)
 		{
 			System.out.println(obj.convertObj());
-		}
+		}*/
 		ExcelWriter.exportExcelFile(IConstants.EXPORT_EXCEL_FILE, results,
 				IConstants.EXCEL_EXPORT_SHEET, _export_header);
 		System.out.println("Export completed !");
@@ -241,6 +248,8 @@ public class TagProcess {
 
 	public static void GetTagByKeyColumn(List<String> header_key) throws IOException
 	{
+		//Init variable
+		AutoLogger log = AutoLogger.getInstance();
 		HashMap<String, String> hashmap = new HashMap<>();
 		List<String[]> mm_result = new ArrayList<String[]>();
 		List<Trade> obj_trades = new ArrayList<Trade>();
@@ -256,7 +265,9 @@ public class TagProcess {
 		
 		int size = com_result.size();
 		
-		
+		// START loop to read Mismatch file
+		System.out.println("Processing .... ");
+		log.initLogFile();
 		for (ResultObj item : com_result)
 		{
 			hashmap.clear();
@@ -268,7 +279,6 @@ public class TagProcess {
 			
 			// Check Trade NB whether to exists in DB
 			boolean is_trade_exist = false;
-			Trade obj_trade = new Trade();
 			obj_trades = DBUtils.GetTradeByCriteria(hashmap, false);
 			is_trade_exist = (obj_trades != null && obj_trades.size() != 0);
 			if (is_trade_exist)
@@ -312,6 +322,5 @@ public class TagProcess {
 		ExcelWriter.exportExcelFile(IConstants.EXPORT_EXCEL_FILE, results,
 				IConstants.EXCEL_EXPORT_SHEET,_export_header);
 		System.out.println("Export completed !");
-		
 	}
 }

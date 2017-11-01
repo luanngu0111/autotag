@@ -33,6 +33,7 @@ import jxl.write.Label;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
+import resources.AutoLogger;
 import resources.IConstants;
 import upskills.tagprocess.ResultObj;
 
@@ -323,6 +324,7 @@ public class ExcelWriter {
 	 */
 	public static void exportXLSXFile(String filename, List<ResultObj> result, String sheetname,
 			List<String> column_header) {
+		AutoLogger log  = AutoLogger.getInstance();
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		XSSFSheet sheet = workbook.createSheet(sheetname);
 		int rowNum = 0;
@@ -439,8 +441,10 @@ public class ExcelWriter {
 			workbook.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			log.error(Arrays.toString(e.getStackTrace()));
 		} catch (IOException e) {
 			e.printStackTrace();
+			log.error(Arrays.toString(e.getStackTrace()));
 		}
 	}
 

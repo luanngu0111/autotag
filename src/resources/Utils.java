@@ -1,5 +1,7 @@
 package resources;
 
+import java.util.Arrays;
+
 public class Utils {
 
 	public Utils() {
@@ -7,6 +9,7 @@ public class Utils {
 	}
 
 	public static int parseTradeNumber(String str) {
+		AutoLogger log = AutoLogger.getInstance();
 	    int number = 0;
 	    try {
 	        number =  Integer.parseInt(str);
@@ -20,6 +23,7 @@ public class Utils {
 	                try {
 	                    number = (int) Long.parseLong(str);
 	                } catch(NumberFormatException e3) {
+	                	log.writeInLog(Arrays.toString(e3.getStackTrace()));
 	                    throw e3;
 	                }       
 	            }       
