@@ -142,7 +142,7 @@ public class ImportTagProcess {
 			int result = DBUtils.insertTrades(trades);
 			if (result != -1) {
 				System.out.println("Importing is successful !");
-				log.endProg("Importing failed !");
+				log.endProg("Importing successful !");
 			}
 			else {
 				System.out.println("Importing failed !");

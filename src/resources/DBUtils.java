@@ -36,6 +36,10 @@ public class DBUtils {
 	{
 		HbnIssueDao hbn = HbnIssueDao.getInstance();
 		Issue issue= hbn.getIssueById(id);
+		if (issue==null)
+		{
+			AutoLogger.getInstance().messageBox("Issue not found");
+		}
 		return issue;
 		
 	}

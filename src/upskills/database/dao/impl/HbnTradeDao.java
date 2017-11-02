@@ -1,11 +1,13 @@
 package upskills.database.dao.impl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 
+import resources.AutoLogger;
 import upskills.database.dao.TradeDao;
 import upskills.database.model.Trade;
 import upskills.database.model.TradeId;
@@ -108,13 +110,19 @@ public class HbnTradeDao extends AbstractHbnDao<Trade> implements TradeDao {
 		int result = -1;
 		Transaction tx = null;
 		Session session = getSession();
+		try {
+			tx = session.beginTransaction();
+			result = (Integer) session.createNativeQuery(query_string.trim()).executeUpdate();
+			tx.commit();
+		} catch (Exception e) {
+			tx.rollback();
+			AutoLogger.getInstance().error4Dev(e.getMessage()+ Arrays.toString(e.getStackTrace()));
+			
+			throw new Exception("Input data invalid");
 
-		tx = session.beginTransaction();
-		result = (Integer) session.createNativeQuery(query_string.trim()).executeUpdate();
-		tx.commit();
-
-		session.close();
-
+		} finally {
+			session.close();
+		}
 		return result;
 	}
 }
