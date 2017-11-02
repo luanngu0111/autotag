@@ -2,6 +2,7 @@ package upskills.database.dao.impl;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.Arrays;
 import java.util.List;
 
 import upskills.database.Configs;
@@ -12,6 +13,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
+import resources.AutoLogger;
 import resources.IConstants;
 
 public abstract class AbstractHbnDao<T extends Object> implements Dao<T> {
@@ -60,6 +62,7 @@ public abstract class AbstractHbnDao<T extends Object> implements Dao<T> {
 		} catch (Exception e) {
 //			e.printStackTrace();
 			System.out.println(e.getMessage());
+			AutoLogger.getInstance().writeInLog(Arrays.toString(e.getStackTrace()));
 			tx.rollback();
 		} finally {
 			session.close();
@@ -96,6 +99,7 @@ public abstract class AbstractHbnDao<T extends Object> implements Dao<T> {
 			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
+			AutoLogger.getInstance().writeInLog(Arrays.toString(e.getStackTrace()));
 			tx.rollback();
 		} finally {
 			session.close();
@@ -127,6 +131,7 @@ public abstract class AbstractHbnDao<T extends Object> implements Dao<T> {
 			return (T) this.getSession().get(getDomainClass(), id);
 		} catch (Exception e) {
 			e.printStackTrace();
+			AutoLogger.getInstance().writeInLog(Arrays.toString(e.getStackTrace()));
 			return null;
 		} finally {
 			session.close();
@@ -145,6 +150,7 @@ public abstract class AbstractHbnDao<T extends Object> implements Dao<T> {
 			return (T) this.getSession().load(getDomainClass(), id);
 		} catch (Exception e) {
 			e.printStackTrace();
+			AutoLogger.getInstance().writeInLog(Arrays.toString(e.getStackTrace()));
 			return null;
 		} finally {
 			session.close();
@@ -160,6 +166,7 @@ public abstract class AbstractHbnDao<T extends Object> implements Dao<T> {
 			return this.getSession().createQuery("from " + getDomainClassName()).list();
 		} catch (Exception e) {
 			e.printStackTrace();
+			AutoLogger.getInstance().writeInLog(Arrays.toString(e.getStackTrace()));
 			return null;
 		} finally {
 			session.close();
@@ -176,6 +183,7 @@ public abstract class AbstractHbnDao<T extends Object> implements Dao<T> {
 			return (Long) this.getSession().createQuery("select count(*) from " + getDomainClassName()).uniqueResult();
 		} catch (Exception e) {
 			e.printStackTrace();
+			AutoLogger.getInstance().writeInLog(Arrays.toString(e.getStackTrace()));
 			return 0;
 		} finally {
 			session.close();
@@ -191,6 +199,7 @@ public abstract class AbstractHbnDao<T extends Object> implements Dao<T> {
 			return (this.get(id) != null);
 		} catch (Exception e) {
 			e.printStackTrace();
+			AutoLogger.getInstance().writeInLog(Arrays.toString(e.getStackTrace()));
 			return false;
 		} finally {
 			session.close();

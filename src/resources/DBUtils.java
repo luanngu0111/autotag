@@ -1,5 +1,6 @@
 package resources;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -122,7 +123,10 @@ public class DBUtils {
 	{
 		int result = -1;
 		if (trades==null || trades.size()==0)
+		{
+			AutoLogger.getInstance().error("No trade imported");
 			return -1;
+		}
 		HbnTradeDao hbn = HbnTradeDao.getInstance();
 		StringBuilder sb = new StringBuilder();
 		String query = "INSERT INTO trade (NB,instrument,currency,portfolio,trn_fmly,trn_grp,trn_type,trn_status,field,issue_id) VALUES ";

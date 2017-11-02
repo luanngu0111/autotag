@@ -83,6 +83,7 @@ public class ImportTagProcess {
 
 			for (String[] row : tag_result) {
 				System.out.println("Fetching ... " + ++step * 100 / size + "% of " + size);
+				log.writeInLog("Fetching ... " + step * 100 / size + "% of " + size);
 				Trade trade = new Trade();
 				if (row[0].trim() != "" && (row[0].trim().equals("X") || row[0].trim().equals("Y"))) {
 
@@ -139,8 +140,10 @@ public class ImportTagProcess {
 			size = trade_record.size();
 			List<Trade> trades = new ArrayList<>(trade_record.values());
 			int result = DBUtils.insertTrades(trades);
-			if (result != -1)
+			if (result != -1) {
 				System.out.println("Importing is successful !");
+				log.endProg("Importing failed !");
+			}
 			else {
 				System.out.println("Importing failed !");
 				log.error("Importing failed !");
