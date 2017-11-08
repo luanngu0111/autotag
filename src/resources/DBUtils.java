@@ -1,5 +1,6 @@
 package resources;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -135,7 +136,7 @@ public class DBUtils {
 		int size = trades.size();
 		StringBuilder sb = new StringBuilder();
 		String query = "INSERT INTO trade (NB,instrument,currency,portfolio,trn_fmly,trn_grp,trn_type,trn_status,field,issue_id) VALUES ";
-		int lot = size / 10000;
+		List<String> queries = new ArrayList<String>(); 
 		for (int i = 0 ; i < size; i++){
 			Trade trade  = trades.get(i);
 			sb.append(String.format("(%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d), \n",
@@ -150,12 +151,19 @@ public class DBUtils {
 					trade.getId().getField(),
 					trade.getIssue().getId()));
 			if ((i > 0 && i%10000==0) || i==size-1){
-				System.out.println("Import data "+ i);
+				
 				sb.insert(0, query);
 				sb.deleteCharAt(sb.lastIndexOf(",")).append("ON DUPLICATE KEY UPDATE NB=VALUES(NB), field=VALUES(field)");
-				result = hbn.insertTrades(sb.toString());
+//				result = hbn.insertTrades(sb.toString());
+				queries.add(sb.toString());
 				sb.delete(0, sb.length());
+				System.out.println("Import data "+ i);
 			}
+		}
+		
+		for (String q : queries)
+		{
+			result = hbn.insertTrades(q);
 		}
 		return result;
 	}
