@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.mysql.jdbc.PreparedStatement;
+
 import upskills.database.dao.impl.HbnIssueDao;
 import upskills.database.dao.impl.HbnTradeDao;
 import upskills.database.dao.impl.HbnTrnHdrDao;
@@ -167,5 +169,10 @@ public class DBUtils {
 		}
 		return result;
 	}
-	
+	public static int insertMultipleTrade(List<Trade> trades){
+		int result = -1;
+		HbnTradeDao hbn = HbnTradeDao.getInstance();
+		result = hbn.insertTrades(trades);
+		return result;
+	}
 }

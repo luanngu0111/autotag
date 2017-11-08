@@ -10,6 +10,7 @@ import upskills.database.dao.Dao;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
@@ -34,6 +35,10 @@ public abstract class AbstractHbnDao<T extends Object> implements Dao<T> {
 		} catch (Exception e) {
 			return sessionFactory.openSession();
 		}
+	}
+	
+	protected StatelessSession getStatelessSession() {
+		return sessionFactory.openStatelessSession();
 	}
 
 	protected void closeSession(){

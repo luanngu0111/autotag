@@ -4,8 +4,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
+
+import com.mysql.jdbc.PreparedStatement;
 
 import resources.AutoLogger;
 import upskills.database.dao.TradeDao;
@@ -41,7 +44,8 @@ public class HbnTradeDao extends AbstractHbnDao<Trade> implements TradeDao {
 
 		try {
 			tx = session.beginTransaction();
-			result = (List) session.getNamedQuery("getTradeByNb").setParameter("NB", nb).list();
+			result = (List) session.getNamedQuery("getTradeByNb")
+					.setParameter("NB", nb).list();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -73,8 +77,10 @@ public class HbnTradeDao extends AbstractHbnDao<Trade> implements TradeDao {
 
 		try {
 			tx = session.beginTransaction();
-			result = (Trade) session.getNamedQuery("getTradeByNbAndField").setParameter("NB", tradeId.getNb())
-					.setParameter("field", tradeId.getField().trim()).uniqueResult();
+			result = (Trade) session.getNamedQuery("getTradeByNbAndField")
+					.setParameter("NB", tradeId.getNb())
+					.setParameter("field", tradeId.getField().trim())
+					.uniqueResult();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -94,8 +100,10 @@ public class HbnTradeDao extends AbstractHbnDao<Trade> implements TradeDao {
 
 		try {
 			tx = session.beginTransaction();
-			result = (Integer) session.getNamedQuery("deleteTradeByKey").setParameter("NB", tradeId.getNb())
-					.setParameter("field", tradeId.getField().trim()).executeUpdate();
+			result = (Integer) session.getNamedQuery("deleteTradeByKey")
+					.setParameter("NB", tradeId.getNb())
+					.setParameter("field", tradeId.getField().trim())
+					.executeUpdate();
 			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -109,14 +117,17 @@ public class HbnTradeDao extends AbstractHbnDao<Trade> implements TradeDao {
 	public Integer insertTrades(String query_string) throws Exception {
 		int result = -1;
 		Transaction tx = null;
-		Session session = getSession();
+		StatelessSession session = getStatelessSession();
 		try {
 			tx = session.beginTransaction();
-			result = (Integer) session.createNativeQuery(query_string.trim()).executeUpdate();
+			result = (Integer) session.createNativeQuery(query_string.trim())
+					.executeUpdate();
 			tx.commit();
 		} catch (Exception e) {
 			tx.rollback();
-			AutoLogger.getInstance().error4Dev(e.getMessage() + Arrays.toString(e.getStackTrace()) + query_string);
+			AutoLogger.getInstance().error4Dev(
+					e.getMessage() + Arrays.toString(e.getStackTrace())
+							+ query_string);
 
 			throw new Exception("Input data invalid");
 
@@ -125,4 +136,23 @@ public class HbnTradeDao extends AbstractHbnDao<Trade> implements TradeDao {
 		}
 		return result;
 	}
+
+	public Integer insertTrades(List<Trade> trades) {
+		int result = -1;
+		Transaction tx = null;
+		StatelessSession session = getStatelessSession();
+		try {
+			tx = session.beginTransaction();
+			for (Trade trade : trades) {
+				session.insert(trade);
+			}
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return result;
+	}
+
 }
