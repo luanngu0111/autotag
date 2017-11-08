@@ -116,8 +116,8 @@ public class HbnTradeDao extends AbstractHbnDao<Trade> implements TradeDao {
 			tx.commit();
 		} catch (Exception e) {
 			tx.rollback();
-			AutoLogger.getInstance().error4Dev(e.getMessage()+ Arrays.toString(e.getStackTrace()));
-			
+			AutoLogger.getInstance().error4Dev(e.getMessage() + Arrays.toString(e.getStackTrace()) + query_string);
+
 			throw new Exception("Input data invalid");
 
 		} finally {

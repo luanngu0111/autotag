@@ -132,24 +132,31 @@ public class DBUtils {
 			return -1;
 		}
 		HbnTradeDao hbn = HbnTradeDao.getInstance();
+		int size = trades.size();
 		StringBuilder sb = new StringBuilder();
 		String query = "INSERT INTO trade (NB,instrument,currency,portfolio,trn_fmly,trn_grp,trn_type,trn_status,field,issue_id) VALUES ";
-		sb.append(query);
-		for (Trade trade: trades){
-		sb.append(String.format("(%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d), \n",
-				trade.getId().getNb(),
-				trade.getInstrument(),
-				trade.getCurrency(),
-				trade.getPortfolio(),
-				trade.getTrnFmly(),
-				trade.getTrnGrp(),
-				trade.getTrnType(),
-				trade.getTrnStatus(),
-				trade.getId().getField(),
-				trade.getIssue().getId()));
+		int lot = size / 10000;
+		for (int i = 0 ; i < size; i++){
+			Trade trade  = trades.get(i);
+			sb.append(String.format("(%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d), \n",
+					trade.getId().getNb(),
+					trade.getInstrument(),
+					trade.getCurrency(),
+					trade.getPortfolio(),
+					trade.getTrnFmly(),
+					trade.getTrnGrp(),
+					trade.getTrnType(),
+					trade.getTrnStatus(),
+					trade.getId().getField(),
+					trade.getIssue().getId()));
+			if ((i > 0 && i%10000==0) || i==size-1){
+				System.out.println("Import data "+ i);
+				sb.insert(0, query);
+				sb.deleteCharAt(sb.lastIndexOf(",")).append("ON DUPLICATE KEY UPDATE NB=VALUES(NB), field=VALUES(field)");
+				result = hbn.insertTrades(sb.toString());
+				sb.delete(0, sb.length());
+			}
 		}
-		sb.deleteCharAt(sb.lastIndexOf(",")).append("ON DUPLICATE KEY UPDATE NB=VALUES(NB), field=VALUES(field)");
-		result = hbn.insertTrades(sb.toString());
 		return result;
 	}
 	

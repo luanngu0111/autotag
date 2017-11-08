@@ -138,15 +138,16 @@ public class ImportTagProcess {
 			}
 			step = 0;
 			size = trade_record.size();
-			List<Trade> trades = new ArrayList<>(trade_record.values());
-			int result = DBUtils.insertTrades(trades);
-			if (result != -1) {
-				System.out.println("Importing is successful !");
-				log.endProg("Importing successful !");
-			}
-			else {
-				System.out.println("Importing failed !");
-				log.error("Importing failed !");
+			if (size > 0) {
+				List<Trade> trades = new ArrayList<>(trade_record.values());
+				int result = DBUtils.insertTrades(trades);
+				if (result != -1) {
+					System.out.println("Importing is successful !");
+					log.endProg("Importing successful !");
+				} else {
+					System.out.println("Importing failed !");
+					log.error("Importing failed !");
+				}
 			}
 
 		} else {

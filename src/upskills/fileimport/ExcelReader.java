@@ -11,11 +11,16 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import jxl.read.biff.BiffException;
@@ -149,10 +154,9 @@ public class ExcelReader {
 		Workbook workbook = null;
 		AutoLogger log = AutoLogger.getInstance();
 		try {
-
-			FileInputStream excelFile = new FileInputStream(new File(filename));
-			workbook = new XSSFWorkbook(excelFile);
-
+//			FileInputStream excelFile = new FileInputStream(new File(filename));
+			workbook = WorkbookFactory.create(new File(filename));
+//			workbook = new XSSFWorkbook(excelFile);
 			// Get data sheet by sheet name or index of sheet.
 			Sheet datatypeSheet = workbook.getSheetAt(sheet_id);
 			lines = readSheetXLSX(datatypeSheet);
@@ -163,7 +167,13 @@ public class ExcelReader {
 		} catch (IOException e) {
 			e.printStackTrace();
 			log.writeInLog(Arrays.toString(e.getStackTrace()));
-		} finally {
+		} catch (EncryptedDocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  finally {
 			if (workbook != null) {
 				workbook.close();
 			}
