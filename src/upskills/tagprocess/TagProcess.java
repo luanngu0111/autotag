@@ -146,7 +146,7 @@ public class TagProcess {
 	public static void main(String[] args){
 //			
 		try {
-			String[] header = new String[]{"PORTFOLIO", "INSTRUMENT"};
+			String[] header = new String[]{"NB"};
 			MajorProc(Arrays.asList(header));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -163,6 +163,8 @@ public class TagProcess {
 	}
 	
 	public static void MajorProc(List<String> header_key) throws IOException {
+		
+//		GetTagByKeyColumn_v2(header_key);
 		if (header_key == null || header_key.size() == 0 
 				|| (header_key.size()==1 && HeaderMap.MapHeaderToColumn(header_key.get(0)).equals("NB"))) {
 			GetTagByTrade();
@@ -195,12 +197,13 @@ public class TagProcess {
 		System.out.println("Processing .... ");
 		log.initLogFile();
 		HbnTradeDao hb_trade_dao = HbnTradeDao.getInstance();
+		int ind = 0;
 		for (ResultObj tf : trade_field) {
 			field_name = tf.getField_name();
 			trade_number = tf.getTrade_number();
 			TradeId tradeid = new TradeId(field_name, trade_number);
 			
-			hb_trade_dao.getTradeByNbAndField(tradeid);
+//			hb_trade_dao.getTradeByNbAndField(tradeid);
 			
 			// Check Trade NB whether to exists in DB
 			boolean is_trade_exist = false;
@@ -236,10 +239,10 @@ public class TagProcess {
 		}
 		// END loop
 		
-		/*for (ResultObj obj  : results)
+		for (ResultObj obj  : results)
 		{
 			System.out.println(obj.convertObj());
-		}*/
+		}
 		ExcelWriter.exportExcelFile(IConstants.EXPORT_EXCEL_FILE, results,
 				IConstants.EXCEL_EXPORT_SHEET, _export_header);
 		System.out.println("Export completed !");
@@ -286,7 +289,8 @@ public class TagProcess {
 				hashmap.put("field", item.getField_name());
 				List<Trade> obj_trade_field = DBUtils.GetTradeByCriteria(hashmap, false);
 				Set<Integer> issue = new HashSet<>();
-				if (obj_trade_field != null && obj_trade_field.size()!=0)
+				/* Check field and key whether to exist */
+				if (obj_trade_field != null && obj_trade_field.size()!=0) // exist
 				{
 					issue.clear();
 					for (Trade obj : obj_trade_field)
@@ -297,7 +301,7 @@ public class TagProcess {
 					item.addAllIssues(issue);
 					results.add(item);
 				}
-				else
+				else // not exist
 				{
 					issue.clear();
 					for (Trade obj : obj_trades)
@@ -322,5 +326,73 @@ public class TagProcess {
 		ExcelWriter.exportExcelFile(IConstants.EXPORT_EXCEL_FILE, results,
 				IConstants.EXCEL_EXPORT_SHEET,_export_header);
 		System.out.println("Export completed !");
+	}
+	
+	public static void GetTagByKeyColumn_v2(List<String> header_key) throws IOException
+	{
+		// Init variable
+		AutoLogger log = AutoLogger.getInstance();
+		HashMap<String, String> hashmap = new HashMap<>();
+		List<String[]> mm_result = new ArrayList<String[]>();
+		List<Trade> obj_trades = new ArrayList<Trade>();
+		List<ResultObj> results = new ArrayList<ResultObj>();
+		if (IConstants.EXCEL_SHEET_ID != -1) {
+			mm_result = ExcelReader.readExcelFile(IConstants.FILE_PATH, IConstants.EXCEL_SHEET_NAME);
+		} else {
+			mm_result = ExcelReader.readExcelFile(IConstants.FILE_PATH, IConstants.EXCEL_SHEET_ID);
+		}
+
+		List<ResultObj> com_result = extractMismatchColumn(mm_result);
+		// START loop to read Mismatch file
+		System.out.println("Processing .... ");
+		log.initLogFile();
+		for (ResultObj item : com_result)
+		{
+			hashmap.clear();
+			for (String header : header_key)
+			{
+				hashmap.put(header, item.getValueByName(header).toString());
+			}
+			
+			// Check Trade NB whether to exists in DB
+			boolean is_trade_exist = false;
+			obj_trades = DBUtils.GetTradeByCriteria(hashmap, item.getField_name());
+			is_trade_exist = (obj_trades != null && obj_trades.size() != 0);
+			if (is_trade_exist)
+			{
+				Set<Integer> issue = new HashSet<>();
+				/* Check field and key whether to exist */
+				if (obj_trades.size()== 1) // exists
+				{
+					issue.clear();
+					for (Trade obj : obj_trades)
+					{
+						issue.add(obj.getIssue().getId());
+					}
+					item.setSystematic(true);
+					item.addAllIssues(issue);
+					results.add(item);
+				}
+				else
+				{
+					issue.clear();
+					for (Trade obj : obj_trades)
+					{
+						issue.add(obj.getIssue().getId());
+					}
+					item.addAllIssues(issue);
+					results.add(item);
+				}
+			}
+			else 
+			{
+				results.add(item);
+			}
+		}
+		
+		ExcelWriter.exportExcelFile(IConstants.EXPORT_EXCEL_FILE, results,
+				IConstants.EXCEL_EXPORT_SHEET,_export_header);
+		System.out.println("Export completed !");
+		
 	}
 }

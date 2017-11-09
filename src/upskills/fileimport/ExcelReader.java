@@ -154,26 +154,28 @@ public class ExcelReader {
 		Workbook workbook = null;
 		AutoLogger log = AutoLogger.getInstance();
 		try {
-//			FileInputStream excelFile = new FileInputStream(new File(filename));
 			workbook = WorkbookFactory.create(new File(filename));
-//			workbook = new XSSFWorkbook(excelFile);
 			// Get data sheet by sheet name or index of sheet.
 			Sheet datatypeSheet = workbook.getSheetAt(sheet_id);
 			lines = readSheetXLSX(datatypeSheet);
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			log.writeInLog(Arrays.toString(e.getStackTrace()));
+			log.error4Dev(Arrays.toString(e.getStackTrace()));
 		} catch (IOException e) {
 			e.printStackTrace();
 			log.writeInLog(Arrays.toString(e.getStackTrace()));
 		} catch (EncryptedDocumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			log.error4Dev(Arrays.toString(e.getStackTrace()));
 		} catch (InvalidFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}  finally {
+			log.error4Dev(Arrays.toString(e.getStackTrace()));
+		} catch (Exception e) {
+			
+		} finally {
 			if (workbook != null) {
 				workbook.close();
 			}

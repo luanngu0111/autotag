@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `recondb` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `recondb`;
--- MySQL dump 10.13  Distrib 5.6.24, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
 -- Host: localhost    Database: recondb
 -- ------------------------------------------------------
--- Server version	5.6.26-log
+-- Server version	5.7.19-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -37,6 +37,7 @@ CREATE TABLE `trade` (
   `issue_id` int(10) DEFAULT NULL,
   PRIMARY KEY (`field`,`NB`),
   KEY `issue_id` (`issue_id`),
+  KEY `idx_trade_NB` (`NB`),
   CONSTRAINT `trade_ibfk_1` FOREIGN KEY (`issue_id`) REFERENCES `issue` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -50,6 +51,14 @@ LOCK TABLES `trade` WRITE;
 INSERT INTO `trade` VALUES (12351,'FUT1','EUR','FUT PTF','EQD','FUT','','LIVE','MV',2),(12352,'FUT2','USD','FUT PTF','EQD','FUT','','LIVE','MV',2),(12353,'FUT1','EUR','FUT PTF','EQD','FUT','','LIVE','MV',2),(12354,'FUT2','USD','FUT PTF','EQD','FUT','','LIVE','MV',2),(12356,'FUT3','USD','FUT PTF','EQD','FUT','','LIVE','MV',2),(12357,'FUT1','USD','FUT PTF','EQD','FUT','','LIVE','MV',2),(12345,'SEC1','EUR','EQD PTF','EQD','OPT','OTC','LIVE','PC',1),(12347,'SEC1','EUR','EQD PTF','EQD','OPT','OTC','LIVE','PC',1),(12348,'SEC2','EUR','EQD PTF','EQD','OPT','OTC','LIVE','PC',1),(12350,'SEC2','EUR','EQD PTF','EQD','OPT','OTC','LIVE','PC',1),(12351,'FUT1','EUR','FUT PTF','EQD','FUT','','LIVE','PC',3),(12353,'FUT1','EUR','FUT PTF','EQD','FUT','','LIVE','PC',3);
 /*!40000 ALTER TABLE `trade` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping events for database 'recondb'
+--
+
+--
+-- Dumping routines for database 'recondb'
+--
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -60,4 +69,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-09-28 19:02:07
+-- Dump completed on 2017-11-09 13:52:50
